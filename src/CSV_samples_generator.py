@@ -1,7 +1,9 @@
-"""
-Simple script to generate CSV files whose values are random real numbers between -1.0 and 1.0.
+"""Generator of CSV sample files
+
+This script can be used to generate CSV files whose values are random real numbers between -1.0 and 1.0.
 """
 
+import os
 import csv
 import numpy as np
 
@@ -12,6 +14,7 @@ NUMBER_OF_COLUMNS = 256
 OUTPUT_FOLDER = "../sample_data/"
 
 for i in range(NUMBER_OF_FILES):
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     filename = OUTPUT_FOLDER + "data_byte_" + str(i).zfill(len(str(NUMBER_OF_FILES))) + ".csv"
 
     csv_rows = 2 * np.random.random_sample(size=(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS)) - 1
