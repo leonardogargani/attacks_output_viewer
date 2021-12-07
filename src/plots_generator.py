@@ -17,6 +17,7 @@ INPUT_FOLDER = "../sample_data/"
 app = QApplication(sys.argv)
 widget = pg.GraphicsLayoutWidget()
 
+
 for plot_row in range(PLOTS_ROWS):
     for plot_column in range(PLOTS_COLUMNS):
 

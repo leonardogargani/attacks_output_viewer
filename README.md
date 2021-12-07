@@ -1,7 +1,6 @@
 # Attacks output viewer
 
-Data visualization application for CPA/Template attacks output, based on [PyQtGraph](https://www.pyqtgraph.org)
-and [PySide](https://wiki.qt.io/Qt_for_Python).
+Data visualization application for CPA/Template attacks output, based on [PyQtGraph](https://www.pyqtgraph.org).
 
 
 ## Input data
