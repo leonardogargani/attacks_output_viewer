@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import QApplication
 PLOTS_ROWS = 4
 PLOTS_COLUMNS = 4
 
+
 INPUT_FOLDER = "../sample_data/"
 
 app = QApplication(sys.argv)
@@ -32,6 +33,9 @@ for plot_row in range(PLOTS_ROWS):
         plot = widget.addPlot(row=plot_row, col=plot_column)
         plot.setTitle('Byte #' + str(file_number))
         plot.setWindowTitle('Attacks output viewer')
+
+        plot.setDownsampling(auto=True,mode='subsample')
+
 
         for num in range(correlation_values.shape[1]):
             plot.plot(time_instants, correlation_values[:, num])
