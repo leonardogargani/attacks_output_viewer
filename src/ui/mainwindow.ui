@@ -15,6 +15,9 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="PlotWidget" name="graph_widget" native="true">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -52,21 +55,9 @@
     <property name="title">
      <string>Select Byte</string>
     </property>
-    <addaction name="actionByte_1"/>
-    <addaction name="actionByte_2"/>
    </widget>
    <addaction name="menuSelect"/>
   </widget>
-  <action name="actionByte_1">
-   <property name="text">
-    <string>Byte #1</string>
-   </property>
-  </action>
-  <action name="actionByte_2">
-   <property name="text">
-    <string>Byte #2</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
