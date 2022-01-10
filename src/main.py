@@ -44,6 +44,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for num in range(correlation_values.shape[1]):
             self.graph_widget.plot(time_instants, correlation_values[:, num], pen=pg.intColor(num))
+            # Plot only data points that are currently visible
+            # When plot is zoomed, less points are plotted and therefore it is smoother
+            self.graph_widget.setClipToView(True)
+            # Enable downsampling
+            # ds = 0.1 is a dummy value because auto is set to True and therefore ds is automatically picked in function of visible range
+            # mode='subsample', least accurate method but fast
+            # see documentation for more details https://pyqtgraph.readthedocs.io/en/latest/graphicsItems/plotitem.html
+            self.graph_widget.setDownsampling(ds=0.1, auto=True, mode='subsample')
+
 
         self.top_label.setText("Byte #" + str(byte_number).zfill(2))
 
