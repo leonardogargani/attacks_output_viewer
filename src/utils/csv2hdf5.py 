@@ -16,7 +16,7 @@ hdf5_filename = "sample_data.hdf5"
 PLOTS_ROWS = 4
 PLOTS_COLUMNS = 4
 
-INPUT_FOLDER = "../sample_data/"
+INPUT_FOLDER = "../../sample_data/"
 
 # Create .hdf5 file in write mode
 f = h5py.File(INPUT_FOLDER + hdf5_filename, 'w')
