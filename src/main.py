@@ -9,6 +9,7 @@ import sys
 
 from PyQt5 import QtWidgets, uic
 import numpy as np
+import pyqtgraph as pg
 
 
 UI_FILE = 'ui/mainwindow.ui'
@@ -42,12 +43,16 @@ class MainWindow(QtWidgets.QMainWindow):
         time_instants = range(correlation_values.shape[0])
 
         for num in range(correlation_values.shape[1]):
-            self.graph_widget.plot(time_instants, correlation_values[:, num])
+            self.graph_widget.plot(time_instants, correlation_values[:, num], pen=pg.intColor(num))
 
         self.top_label.setText("Byte #" + str(byte_number).zfill(2))
 
 
 def main():
+    ## Switch to using white background and black foreground
+    pg.setConfigOption('background', 'w')
+    pg.setConfigOption('foreground', 'k')
+
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     print('Rendering the window...')
