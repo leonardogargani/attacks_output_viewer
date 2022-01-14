@@ -31,7 +31,7 @@ for i in range(16):
 filename = '1'
 if not os.path.exists(INPUT_FOLDER + filename + '.npy'):
     # Read csv file
-    # !!! WARNING !!! Delimiter is now a space character and not a comma. The nan values are replaced by 0
+    # /!\ WARNING /!\ Delimiter is now a space character and not a comma. The nan values are replaced by 0
     correlation_values = np.genfromtxt(INPUT_FOLDER + filename + '.csv', delimiter=' ', filling_values=0)
     # Save to npy format
     # Saving it 16 times while waiting for the full data set
@@ -49,6 +49,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.populate_menubar()
         # plot the first byte by default
         self.plot_byte(0)
+
+    def click(self, mouseClickEvent):
+        # we should investigate the mouseClickEvent method such as getData etc ...
+        print("mouse click")
 
     def populate_menubar(self):
         filenames = [f for f in os.listdir(INPUT_FOLDER) if f.endswith('.csv')]
@@ -77,6 +81,8 @@ class MainWindow(QtWidgets.QMainWindow):
         dt = time.time() - start
         print('File loaded in', dt, 'seconds')
 
+        # Array that holds the 256 curves
+
         start = time.time()
         for num in range(correlation_values.shape[1]):
             # Plot only data points that are currently visible
@@ -94,11 +100,14 @@ class MainWindow(QtWidgets.QMainWindow):
             # connecting all the lines helps speed up the plot time
             # skipFiniteCheck is by default False, we set it to True because we know that no NaN values are in our data this help speed up plot time
             # According to the doc but no obvious change detected, I am probably not using these features in the correct way
-            # The argument clickable=True makes the curve clickable and when clicked the signal sigClicked is emitted but I don't know how to catch that signal
+            # The argument clickable=True makes the curve clickable and when clicked the signal sigClicked is emitted
             # Here is the doc sigClicked https://pyqtgraph.readthedocs.io/en/latest/graphicsItems/plotcurveitem.html
-            self.graph_widget.plot(correlation_values[:, num], pen=pg.intColor(num), skipFiniteCheck=True, connect='all', clickable=True)
+            line = self.graph_widget.plot(correlation_values[:, num], pen=pg.intColor(num), skipFiniteCheck=True, connect='all', clickable=True)
+            line.sigClicked.connect(self.click)
             # Enable auto range
             self.graph_widget.autoRange()
+
+
 
         dt = time.time() - start
         print(f'Plot generated in {dt} seconds')
@@ -113,6 +122,7 @@ def main():
     ## Switch to using white background and black foreground
     pg.setConfigOption('background', 'w')
     pg.setConfigOption('foreground', 'k')
+    pg.setConfigOptions(antialias=True)
 
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
