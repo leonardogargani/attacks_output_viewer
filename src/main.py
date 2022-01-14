@@ -13,30 +13,32 @@ import numpy as np
 import pyqtgraph as pg
 
 UI_FILE = 'ui/mainwindow.ui'
-INPUT_FOLDER = "../sample_data/"
+INPUT_FOLDER_CSV = "../sample_data/csv/"
+INPUT_FOLDER_NPY = "../sample_data/npy/"
 
 '''
 # if not already done, convert sample csv files to npy format and save them
 for i in range(16):
     filename = 'data_byte_' + str(i + 1).zfill(2)
-    if not os.path.exists(INPUT_FOLDER + filename + '.npy'):
+    if not os.path.exists(INPUT_FOLDER_NPY + filename + '.npy'):
         # read csv file
-        correlation_values = np.loadtxt(INPUT_FOLDER + filename + '.csv', delimiter=' ')
+        correlation_values = np.loadtxt(INPUT_FOLDER_CSV + filename + '.csv', delimiter=' ')
         print('Converting ' + filename + ' into npy...')
         # save to npy format
-        np.save(INPUT_FOLDER + filename, correlation_values)
+        np.save(INPUT_FOLDER_NPY + filename, correlation_values)
 '''
 
 # special case for real data
 filename = '1'
-if not os.path.exists(INPUT_FOLDER + filename.zfill(2) + '.npy'):
+if not os.path.exists(INPUT_FOLDER_NPY + filename.zfill(2) + '.npy'):
+    os.makedirs(INPUT_FOLDER_NPY)
     print('Loading ' + filename + '.csv...')
     # "nan" values are replaced by 0
-    correlation_values = np.genfromtxt(INPUT_FOLDER + filename + '.csv', delimiter=' ', filling_values=0)
+    correlation_values = np.genfromtxt(INPUT_FOLDER_CSV + filename + '.csv', delimiter=' ', filling_values=0)
     # save to npy format (16 times while waiting for the full data set)
     for i in range(16):
         print('Converting ' + filename + '.csv into npy...')
-        np.save(INPUT_FOLDER + str(i + 1).zfill(2), correlation_values)
+        np.save(INPUT_FOLDER_NPY + str(i + 1).zfill(2), correlation_values)
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -49,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_byte(1)
 
     def populate_menubar(self):
-        filenames = [f for f in os.listdir(INPUT_FOLDER) if f.endswith('.npy')]
+        filenames = [f for f in os.listdir(INPUT_FOLDER_NPY) if f.endswith('.npy')]
         for filename in sorted(filenames):
             action = QtWidgets.QAction(filename, self)
             byte_num = int(os.path.splitext(filename)[0])
@@ -71,7 +73,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # correlation_values = np.load(INPUT_FOLDER + 'data_byte_' + str(byte_number).zfill(2) + '.npy')
 
         # for real npy files
-        correlation_values = np.load(INPUT_FOLDER + str(byte_number).zfill(2) + '.npy')
+        correlation_values = np.load(INPUT_FOLDER_NPY + str(byte_number).zfill(2) + '.npy')
 
         dt = time.time() - start
         print('File to plot loaded in ' + str(dt) + ' seconds')
