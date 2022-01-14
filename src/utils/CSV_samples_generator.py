@@ -16,13 +16,13 @@ OUTPUT_FOLDER = "../../sample_data/"
 for i in range(NUMBER_OF_FILES):
 
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    filename = OUTPUT_FOLDER + "data_byte_" + str(i).zfill(len(str(NUMBER_OF_FILES))) + ".csv"
+    filename = OUTPUT_FOLDER + "data_byte_" + str(i+1).zfill(len(str(NUMBER_OF_FILES))) + ".csv"
 
     csv_rows = 2 * np.random.random_sample(size=(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS)) - 1
 
     with open(filename, 'w') as csv_file:
         print('Generating ' + filename + '...')
-        csv_writer = csv.writer(csv_file)
+        csv_writer = csv.writer(csv_file, delimiter=' ')
         csv_writer.writerows(csv_rows)
 
 print('Done.')
