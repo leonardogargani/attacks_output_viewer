@@ -12,7 +12,7 @@ import numpy as np
 import pyqtgraph as pg
 
 UI_FILE = 'ui/mainwindow.ui'
-INPUT_FOLDER_NPY = "../sample_data/npy/"
+NPY_DIRECTORY = "../sample_data/npy/"
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -25,7 +25,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_byte(1)
 
     def populate_menubar(self):
-        filenames = [f for f in os.listdir(INPUT_FOLDER_NPY) if f.endswith('.npy')]
+        filenames = [f for f in os.listdir(NPY_DIRECTORY) if f.endswith('.npy')]
         for filename in sorted(filenames):
             action = QtWidgets.QAction(filename, self)
             byte_num = int(os.path.splitext(filename)[0])
@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def plot_byte(self, byte_number):
         start = time.time()
-        correlation_values = np.load(INPUT_FOLDER_NPY + str(byte_number).zfill(2) + '.npy')
+        correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy')
         dt = time.time() - start
         print('File to plot loaded in ' + str(dt) + ' seconds')
 

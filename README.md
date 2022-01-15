@@ -1,11 +1,14 @@
 # Attacks output viewer
 
-Data visualization application for CPA/Template attacks output, based on [PyQtGraph](https://www.pyqtgraph.org).
+Data visualization application for CPA/Template attacks output, mainly based on:
+- [PyQt5](https://pypi.org/project/PyQt5)
+- [PyQtGraph](https://www.pyqtgraph.org)
+- [NumPy](https://numpy.org)
 
 
 ## Input data
 
-The input data is a set of CSV files, each one with 256 columns and about 100k lines.
+The input data is a set of 16 CSV files, each one composed by 256 columns and about 140k lines.
 
 The values contained inside those files are real numbers between -1.0 and 1.0.
 
