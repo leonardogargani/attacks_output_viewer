@@ -1,11 +1,6 @@
 """
-ES - 2021 - Attacks Output Viewer
-
-Convert the 16 data_byte_xx.csv files to one single sample_data.hdf5 file
-This file contains 16 datasets and each dataset is a byte of the sample data
-
-Leonardo Gargani, Serana Salvi, Olivier Wartique
-
+Convert the 16 data_byte_xx.csv files to one single sample_data.hdf5 file.
+This file contains 16 datasets and each dataset is a byte of the sample data.
 """
 
 import numpy as np

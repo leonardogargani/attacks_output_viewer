@@ -1,5 +1,4 @@
-"""Demo of spawning new window
-
+"""
 This script just shows how to spawn a new window upon a button press.
 """
 

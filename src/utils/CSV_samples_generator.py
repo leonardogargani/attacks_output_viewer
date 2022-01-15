@@ -1,5 +1,4 @@
-"""Generator of CSV sample files
-
+"""
 This script can be used to generate CSV files whose values are random real numbers between -1.0 and 1.0.
 """
 

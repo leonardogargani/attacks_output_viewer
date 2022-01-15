@@ -1,5 +1,4 @@
-"""Generator of plots for CSV files
-
+"""
 This script displays the content of the CSV files all at once.
 The content of each file, representing values of a single byte, has its own plot.
 """
@@ -35,7 +34,6 @@ for plot_row in range(PLOTS_ROWS):
         plot.setWindowTitle('Attacks output viewer')
 
         plot.setDownsampling(auto=True,mode='subsample')
-
 
         for num in range(correlation_values.shape[1]):
             plot.plot(time_instants, correlation_values[:, num])
