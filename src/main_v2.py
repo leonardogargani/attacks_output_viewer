@@ -9,7 +9,7 @@ import sys
 from PyQt5 import QtWidgets, uic
 
 
-UI_FILE = 'ui/mainwindow_buttons.ui'
+UI_FILE = 'ui/mainwindow_v2.ui'
 NPY_DIRECTORY = "../sample_data/npy/"
 
 

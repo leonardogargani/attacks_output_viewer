@@ -12,6 +12,22 @@ The input data is a set of 16 CSV files, each one composed by 256 columns and ab
 
 The values contained inside those files are real numbers between -1.0 and 1.0.
 
+
+## Run instructions
+
+First, place the CSV files inside the *sample_data/csv/* directory.
+
+Then, as a preprocessing step, run the script to convert the `.csv` files into `.npy` files:
+```bash
+python utils/csv_to_npy_converter.py
+```
+
+Finally, execute the program:
+```bash
+python main.py
+```
+
+
 ## Features to implement
 
 The requested features that need to be implemented are the following:
