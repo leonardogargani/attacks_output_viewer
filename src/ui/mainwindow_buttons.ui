@@ -52,7 +52,8 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Each one of the 16 buttons below opens a detailed plot of the recorded data about a single byte. Click one of them.</string>
+       <string>Each one of the buttons below opens a detailed plot of the recorded data about a single byte.
+Click one of them.</string>
       </property>
      </widget>
     </item>
