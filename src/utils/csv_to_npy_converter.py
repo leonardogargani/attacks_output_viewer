@@ -5,8 +5,8 @@ Script that converts CSV files to NPY files.
 import os
 import numpy as np
 
-CSV_DIRECTORY = "../sample_data/csv/"
-NPY_DIRECTORY = "../sample_data/npy/"
+CSV_DIRECTORY = "../../sample_data/csv/"
+NPY_DIRECTORY = "../../sample_data/npy/"
 
 
 # if not already done, convert sample csv files to npy format
@@ -24,7 +24,7 @@ for i in range(16):
 # if not already done, convert real csv files to npy format
 filename = '1'
 if not os.path.exists(NPY_DIRECTORY + filename.zfill(2) + '.npy'):
-    os.makedirs(NPY_DIRECTORY)
+    os.makedirs(NPY_DIRECTORY, exist_ok=True)
     print('Loading ' + filename + '.csv...')
     # "nan" values are replaced by 0
     correlation_values = np.genfromtxt(CSV_DIRECTORY + filename + '.csv', delimiter=' ', filling_values=0)

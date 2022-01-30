@@ -2,7 +2,6 @@
 Window containing the detailed plot of a single byte.
 """
 
-
 import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, uic
@@ -21,21 +20,20 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.setWindowTitle('Detailed plot')
 
     def generate_plot(self, byte_number):
-
-        correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy')
+        correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
 
         print('Generating the plot...')
 
+        # plot only data points that are currently visible (smooth when zoomed in)
+        self.graph_widget.setClipToView(True)
+
+        # Enable downsampling with:
+        # - ds=0.1 (reduction factor for the visible samples)
+        # - auto=True (automatically pick ds based on visible range)
+        # - mode='subsample' (fastest but least accurate method)
+        self.graph_widget.setDownsampling(ds=0.1, auto=True, mode='peak')
+
         for num in range(correlation_values.shape[1]):
-
-            # plot only data points that are currently visible (smooth when zoomed in)
-            self.graph_widget.setClipToView(True)
-
-            # Enable downsampling with:
-            # - ds=0.1 (reduction factor for the visible samples)
-            # - auto=True (automatically pick ds based on visible range)
-            # - mode='subsample' (fastest but least accurate method)
-            self.graph_widget.setDownsampling(ds=0.1, auto=True, mode='subsample')
 
             # disable auto range before plotting for faster plots
             self.graph_widget.disableAutoRange()
@@ -44,11 +42,9 @@ class GraphWindow(QtWidgets.QMainWindow):
             # - skipFiniteCheck=True (because we know that no NaN values are in our data this help speed up plot time)
             # - connect='all' (connecting all the lines helps speed up the plot time)
             # - clickable=True (make the curve clickable: when clicked, the signal sigClicked is emitted)
-            line = self.graph_widget.plot(correlation_values[:, num], pen=pg.intColor(num), skipFiniteCheck=True,
-                                          connect='all', clickable=True)
+            self.graph_widget.plot(correlation_values[:, num], pen=pg.intColor(num), skipFiniteCheck=True, connect='all', clickable=True)
 
             # re-enable auto range
             self.graph_widget.autoRange()
 
         print('Done.')
-
