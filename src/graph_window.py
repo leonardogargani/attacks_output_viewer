@@ -42,7 +42,7 @@ class GraphWindow(QtWidgets.QMainWindow):
             # - skipFiniteCheck=True (because we know that no NaN values are in our data this help speed up plot time)
             # - connect='all' (connecting all the lines helps speed up the plot time)
             # - clickable=True (make the curve clickable: when clicked, the signal sigClicked is emitted)
-            self.graph_widget.plot(correlation_values[:, num], pen=pg.intColor(num), skipFiniteCheck=True, connect='all', clickable=True)
+            self.graph_widget.plot(correlation_values[:, num], pen=pg.intColor(num), skipFiniteCheck=True, clickable=True)
 
             # re-enable auto range
             self.graph_widget.autoRange()
