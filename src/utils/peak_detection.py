@@ -7,7 +7,8 @@ PNG_DIRECTORY = "../../sample_data/png/"
 
 plot_enable = False
 
-for byte_number in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16']:
+for byte_number in range(1, 17):
+    print('Loading byte ' + str(byte_number).zfill(2) + '...')
     correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy')
     # Replacing NaN values by 0
     where_are_NaNs = np.isnan(correlation_values)
@@ -30,13 +31,15 @@ for byte_number in ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'
               arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
     ax.annotate(text, xy=(xmax, ymax), xytext=(0.94, 0.96), **kw)
 
-    plt.title('Byte #'+ str(byte_number))
+    plt.title('Byte #' + str(byte_number))
 
     if plot_enable:
         plt.show()
 
     if not os.path.exists(PNG_DIRECTORY + str(byte_number).zfill(2) + '_peak.png'):
-        plt.savefig(str(PNG_DIRECTORY + byte_number).zfill(2) + '_peak.png')
+        os.makedirs(PNG_DIRECTORY, exist_ok=True)
+        print('Saving plot ' + str(byte_number).zfill(2) + '...')
+        plt.savefig(str(PNG_DIRECTORY + str(byte_number)).zfill(2) + '_peak.png')
 
     print('--------- Byte #' + str(byte_number) + ' ---------')
     print('Peak value    =', peak)
