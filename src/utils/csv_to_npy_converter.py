@@ -22,16 +22,16 @@ for i in range(16):
 '''
 
 # if not already done, convert real csv files to npy format
-filename = '1'
-if not os.path.exists(NPY_DIRECTORY + filename.zfill(2) + '.npy'):
-    os.makedirs(NPY_DIRECTORY, exist_ok=True)
-    print('Loading ' + filename + '.csv...')
-    # "nan" values are replaced by 0
-    correlation_values = np.genfromtxt(CSV_DIRECTORY + filename + '.csv', delimiter=' ', filling_values=0)
+for i in range(16):
+    filename = str(i)
+    if not os.path.exists(NPY_DIRECTORY + filename + '.npy'):
+        os.makedirs(NPY_DIRECTORY, exist_ok=True)
+        print('Loading ' + filename + '.csv...')
+        # "nan" values are replaced by 0
+        correlation_values = np.genfromtxt(CSV_DIRECTORY + filename + '.csv', delimiter=' ', filling_values=0)
 
-    # TODO: substitute this loop with an outer loop when all real data will be available
-    # save to npy format (16 times while waiting for the full data set)
-    for i in range(16):
         print('Converting ' + filename + '.csv into npy...')
-        np.save(NPY_DIRECTORY + str(i + 1).zfill(2), correlation_values)
+        np.save(NPY_DIRECTORY + str(i), correlation_values)
+
+
 

@@ -8,8 +8,8 @@ PNG_DIRECTORY = "../../sample_data/png/"
 plot_enable = False
 
 for byte_number in range(1, 17):
-    print('Loading byte ' + str(byte_number).zfill(2) + '...')
-    correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy')
+    print('Loading byte ' + str(byte_number) + '...')
+    correlation_values = np.load(NPY_DIRECTORY + str(byte_number) + '.npy')
     # Replacing NaN values by 0
     where_are_NaNs = np.isnan(correlation_values)
     correlation_values[where_are_NaNs] = 0
@@ -36,10 +36,10 @@ for byte_number in range(1, 17):
     if plot_enable:
         plt.show()
 
-    if not os.path.exists(PNG_DIRECTORY + str(byte_number).zfill(2) + '_peak.png'):
+    if not os.path.exists(PNG_DIRECTORY + str(byte_number) + '_peak.png'):
         os.makedirs(PNG_DIRECTORY, exist_ok=True)
-        print('Saving plot ' + str(byte_number).zfill(2) + '...')
-        plt.savefig(str(PNG_DIRECTORY + str(byte_number)).zfill(2) + '_peak.png')
+        print('Saving plot ' + str(byte_number) + '...')
+        plt.savefig(str(PNG_DIRECTORY + str(byte_number)) + '_peak.png')
 
     print('--------- Byte #' + str(byte_number) + ' ---------')
     print('Peak value    =', peak)

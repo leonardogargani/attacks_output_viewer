@@ -20,7 +20,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.setWindowTitle('Detailed plot')
 
     def generate_plot(self, byte_number):
-        correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
+        correlation_values = np.load(NPY_DIRECTORY + str(byte_number) + '.npy', mmap_mode='r')
 
         print('Generating the plot...')
 
