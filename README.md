@@ -22,6 +22,11 @@ Then, as a preprocessing step, run the script to convert the `.csv` files into `
 python utils/csv_to_npy_converter.py
 ```
 
+Generate the images highlighting the peaks:
+```bash
+python utils/peak_detection.py
+```
+
 Finally, execute the program:
 ```bash
 python main.py
