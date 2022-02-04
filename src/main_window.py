@@ -9,7 +9,7 @@ from PyQt5 import QtWidgets, uic
 import graph_window
 
 
-MAIN_WINDOW_UI = 'ui/mainwindow.ui'
+MAIN_WINDOW_UI = 'ui/main_window.ui'
 GRAPH_WINDOW_UI = 'ui/graph_window.ui'
 NPY_DIRECTORY = "../sample_data/npy/"
 
