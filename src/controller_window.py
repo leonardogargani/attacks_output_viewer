@@ -22,6 +22,10 @@ class ControllerWindow(QtWidgets.QMainWindow):
 
         for i in range(256):
             checkbox = QCheckBox("curve " + str(i))
+            # TODO: check the curve with the peak by default instead
+            # check first checkbox by default, since the first curve is the one displayed at the beginning
+            if i == 0:
+                checkbox.setChecked(True)
             checkbox.stateChanged.connect(lambda state, x=i: self.click_checkbox(state, x))
             self.vbox.addWidget(checkbox)
 
@@ -37,13 +41,3 @@ class ControllerWindow(QtWidgets.QMainWindow):
             print('Unchecked ' + str(curve_number))
             self.graph_window.remove_curve(curve_number)
 
-
-def main():
-    app = QtWidgets.QApplication(sys.argv)
-    window = ControllerWindow()
-    window.show()
-    sys.exit(app.exec())
-
-
-if __name__ == '__main__':
-    main()
