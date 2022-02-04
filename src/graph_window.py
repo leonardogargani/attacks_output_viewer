@@ -6,6 +6,8 @@ import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, uic
 
+from src import controller_window
+
 MAIN_WINDOW_UI = 'ui/main_window.ui'
 GRAPH_WINDOW_UI = 'ui/graph_window.ui'
 NPY_DIRECTORY = "../sample_data/npy/"
@@ -20,7 +22,10 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.setWindowTitle('Detailed plot')
         self.lines = [None] * 256
 
-    def generate_plot(self, byte_number):
+        self.controller_window = controller_window.ControllerWindow(self)
+        self.controller_window.show()
+
+    def generate_plot(self, byte_number=0):
         self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
         print('Generating the plot...')
         # plot only data points that are currently visible (smooth when zoomed in)
@@ -63,5 +68,9 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def remove_curve(self, line_number):
         self.lines[line_number].clear()
+        print('done')
+        # force window activation to fix PyQt bug, which would require me to click
+        # the graph window to gain the focus at OS system
+        self.activateWindow()
 
 
