@@ -59,3 +59,4 @@ class GraphWindow(QtWidgets.QMainWindow):
         # the graph window to gain the focus at OS system
         self.activateWindow()
 
+

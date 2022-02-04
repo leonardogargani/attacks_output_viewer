@@ -1,4 +1,3 @@
-import sys
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QCheckBox
 
@@ -15,6 +14,7 @@ class ControllerWindow(QtWidgets.QMainWindow):
         uic.loadUi(CONTROLLER_WINDOW_UI, self)
         self.setWindowTitle('Graph controller')
         self.create_scrollarea()
+        self.pushButton.clicked.connect(self.clear_checks)
 
     def create_scrollarea(self):
         self.widget = QWidget()
@@ -41,3 +41,10 @@ class ControllerWindow(QtWidgets.QMainWindow):
             print('Unchecked ' + str(curve_number))
             self.graph_window.remove_curve(curve_number)
 
+    def clear_checks(self):
+        for i in range(256):
+            checkbox = self.vbox.itemAt(i).widget()
+            if checkbox.isChecked:
+                checkbox.setChecked(False)
+
+        self.graph_window.activateWindow()
