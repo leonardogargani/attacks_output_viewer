@@ -23,6 +23,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle('Byte selector')
         self.create_buttons()
 
+    # overriding the closeEvent default function
+    def closeEvent(self, event):
+        self.secondary_window.close()
+
     def create_buttons(self):
         filenames = [f for f in os.listdir(NPY_DIRECTORY) if f.endswith('.npy')]
         row_index = 0

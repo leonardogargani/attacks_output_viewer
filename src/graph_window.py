@@ -6,7 +6,7 @@ import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, uic
 
-from src import controller_window
+import controller_window
 
 MAIN_WINDOW_UI = 'ui/main_window.ui'
 GRAPH_WINDOW_UI = 'ui/graph_window.ui'
@@ -24,6 +24,15 @@ class GraphWindow(QtWidgets.QMainWindow):
 
         self.controller_window = controller_window.ControllerWindow(self)
         self.controller_window.show()
+
+        self.graph_widget.scene().sigMouseClicked.connect(self.graph_click)
+
+    # overriding the closeEvent default function
+    def closeEvent(self, event):
+        self.controller_window.close()
+
+    def graph_click(self, click):
+        print('clicked on ' + str(click.pos().x()) + ' | ' + str(click.pos().y()))
 
     def generate_plot(self, byte_number=0):
         self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
