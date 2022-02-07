@@ -4,13 +4,14 @@ import os
 import matplotlib
 import gc
 
+
 matplotlib.use('agg')
 
 NPY_DIRECTORY = "../../sample_data/npy/"
 PNG_DIRECTORY = "../../sample_data/png/"
 TXT_DIRECTORY = "../../sample_data/txt/"
 
-save_enable = False
+save_enable = True
 
 xMax    = np.empty((16,), dtype=np.float64)
 yMax    = np.empty((16,), dtype=np.float64)
