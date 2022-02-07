@@ -11,13 +11,11 @@ NPY_DIRECTORY = "../../sample_data/npy/"
 PNG_DIRECTORY = "../../sample_data/png/"
 TXT_DIRECTORY = "../../sample_data/txt/"
 
-save_enable = True
-
 xMax    = np.empty((16,), dtype=np.float64)
 yMax    = np.empty((16,), dtype=np.float64)
 lineMax = np.empty((16,), dtype=np.float64)
 
-for byte_number in range(16):
+for byte_number in range(10,12):
     print('-------------------- Byte #' + str(byte_number) + ' --------------------')
     print('Loading file ...')
     correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r+')
@@ -43,7 +41,7 @@ for byte_number in range(16):
         print('Sample number =', index[0])  # Xmax
         print('Byte value    =', format(line_number[0], 'b').zfill(8))  # lineMax
 
-        if save_enable and not os.path.exists(PNG_DIRECTORY + str(byte_number).zfill(2) + '_peak.png'):
+        if not os.path.exists(PNG_DIRECTORY + str(byte_number).zfill(2) + '_peak.png'):
             os.makedirs(PNG_DIRECTORY, exist_ok=True)
 
             print('Saving plot ...')
@@ -51,7 +49,7 @@ for byte_number in range(16):
             fig = plt.figure(figsize=(12, 4))
             plt.plot(correlation_values)
             # plt.plot(correlation_values[:, line_number], color='blue', linewidth=0.01)
-            plt.ylim([-1, 1])
+            plt.ylim([-1, 1.3])
             ax = plt.gca()
             xmax = index[0]
             ymax = peak
