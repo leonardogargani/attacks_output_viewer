@@ -11,11 +11,11 @@ NPY_DIRECTORY = "../../sample_data/npy/"
 PNG_DIRECTORY = "../../sample_data/png/"
 TXT_DIRECTORY = "../../sample_data/txt/"
 
-xMax    = np.empty((16,), dtype=np.float64)
+xMax    = np.empty((16,), dtype=int)
 yMax    = np.empty((16,), dtype=np.float64)
-lineMax = np.empty((16,), dtype=np.float64)
+lineMax = np.empty((16,), dtype=int)
 
-for byte_number in range(10,12):
+for byte_number in range(16):
     print('-------------------- Byte #' + str(byte_number) + ' --------------------')
     print('Loading file ...')
     correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r+')
@@ -25,8 +25,8 @@ for byte_number in range(10,12):
         print('[WARNING] File contains only NaN values, peak detection aborted')
 
         # Save results
-        xMax[byte_number] = -1
-        yMax[byte_number] = -1
+        xMax[byte_number]    = -1
+        yMax[byte_number]    = -1
         lineMax[byte_number] = -1
 
     else:
