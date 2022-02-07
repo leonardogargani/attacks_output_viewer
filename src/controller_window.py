@@ -13,7 +13,6 @@ class ControllerWindow(QtWidgets.QMainWindow):
         self.widget = None
         uic.loadUi(CONTROLLER_WINDOW_UI, self)
         self.setWindowTitle('Graph controller')
-        self.create_scrollarea()
         self.pushButton.clicked.connect(self.clear_checks)
 
     def create_scrollarea(self):
@@ -22,11 +21,10 @@ class ControllerWindow(QtWidgets.QMainWindow):
 
         for i in range(256):
             checkbox = QCheckBox("curve " + str(i))
-            # TODO: check the curve with the peak by default instead
-            # check first checkbox by default, since the first curve is the one displayed at the beginning
-            if i == 0:
-                checkbox.setChecked(True)
             checkbox.stateChanged.connect(lambda state, x=i: self.click_checkbox(state, x))
+            # at first, check only the line with the peak
+            if i == self.graph_window.peak_line:
+                checkbox.setChecked(True)
             self.vbox.addWidget(checkbox)
 
         self.widget.setLayout(self.vbox)
@@ -38,6 +36,8 @@ class ControllerWindow(QtWidgets.QMainWindow):
             print('Checked ' + str(curve_number))
             self.graph_window.add_curve(curve_number)
         else:
+            print('self.graph_window.peak_line = ' + str(self.graph_window.peak_line))
+
             print('Unchecked ' + str(curve_number))
             self.graph_window.remove_curve(curve_number)
 

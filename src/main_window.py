@@ -52,7 +52,5 @@ class MainWindow(QtWidgets.QMainWindow):
     def plot_byte(self, byte_number):
         self.secondary_window = graph_window.GraphWindow()
         self.secondary_window.top_label.setText("Byte #" + str(byte_number).zfill(2))
-        self.secondary_window.show()
-
         self.secondary_window.generate_plot(byte_number)
-
+        self.secondary_window.show()
