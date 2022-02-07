@@ -11,7 +11,7 @@ import controller_window
 
 MAIN_WINDOW_UI = 'ui/main_window.ui'
 GRAPH_WINDOW_UI = 'ui/graph_window.ui'
-NPY_DIRECTORY = "../sample_data/npy/"
+NPY_DIRECTORY = "../data/output/npy/"
 
 
 class GraphWindow(QtWidgets.QMainWindow):
@@ -47,12 +47,13 @@ class GraphWindow(QtWidgets.QMainWindow):
         # - mode='subsample' (fastest but least accurate method)
         self.graph_widget.setDownsampling(ds=0.1, auto=True, mode='peak')
 
-        with open('../sample_data/txt/peak.txt') as peaks_file:
+        with open('../data/output/txt/peak.txt') as peaks_file:
             csv_reader = csv.reader(peaks_file)
             rows = list(csv_reader)
             self.peak_line = int(rows[byte_number][0])
 
         self.controller_window.create_scrollarea()
+        self.controller_window.label_2.setText('The peak is in correspondence of curve ' + str(self.peak_line) + '.')
         self.controller_window.show()
 
     def add_curve(self, line_number):

@@ -5,8 +5,8 @@ Script that converts CSV files to NPY files.
 import os
 import numpy as np
 
-CSV_DIRECTORY = "../../sample_data/csv/"
-NPY_DIRECTORY = "../../sample_data/npy/"
+CSV_DIRECTORY = "../../data/input/csv/"
+NPY_DIRECTORY = "../../data/output/npy/"
 
 
 # if not already done, convert real csv files to npy format

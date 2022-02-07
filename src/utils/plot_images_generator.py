@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-NPY_DIRECTORY = "../../sample_data/npy/"
+NPY_DIRECTORY = "../../data/output/npy/"
 
 
 byte_number = '1'

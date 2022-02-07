@@ -4,20 +4,19 @@ import os
 import matplotlib
 import gc
 
-
 matplotlib.use('agg')
 
-NPY_DIRECTORY = "../../sample_data/npy/"
-PNG_DIRECTORY = "../../sample_data/png/"
-TXT_DIRECTORY = "../../sample_data/txt/"
+NPY_DIRECTORY = "../../data/output/npy/"
+PNG_DIRECTORY = "../../data/output/png/"
+TXT_DIRECTORY = "../../data/output/txt/"
 
-xMax    = np.empty((16,), dtype=int)
-yMax    = np.empty((16,), dtype=np.float64)
+xMax = np.empty((16,), dtype=int)
+yMax = np.empty((16,), dtype=np.float64)
 lineMax = np.empty((16,), dtype=int)
 
 for byte_number in range(16):
     print('-------------------- Byte #' + str(byte_number) + ' --------------------')
-    print('Loading file ...')
+    print('Loading file...')
     correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r+')
 
     # Check if the array contains only NaN values
@@ -25,8 +24,8 @@ for byte_number in range(16):
         print('[WARNING] File contains only NaN values, peak detection aborted')
 
         # Save results
-        xMax[byte_number]    = -1
-        yMax[byte_number]    = -1
+        xMax[byte_number] = -1
+        yMax[byte_number] = -1
         lineMax[byte_number] = -1
 
     else:
@@ -37,14 +36,14 @@ for byte_number in range(16):
         peak = np.nanmax(correlation_values)
         index, line_number = np.where(correlation_values == peak)
 
-        print('Peak value    =', peak)      # Ymax
+        print('Peak value    =', peak)  # Ymax
         print('Sample number =', index[0])  # Xmax
         print('Byte value    =', format(line_number[0], 'b').zfill(8))  # lineMax
 
         if not os.path.exists(PNG_DIRECTORY + str(byte_number).zfill(2) + '_peak.png'):
             os.makedirs(PNG_DIRECTORY, exist_ok=True)
 
-            print('Saving plot ...')
+            print('Saving plot...')
 
             fig = plt.figure(figsize=(12, 4))
             plt.plot(correlation_values)

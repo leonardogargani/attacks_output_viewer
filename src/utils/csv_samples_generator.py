@@ -10,7 +10,7 @@ NUMBER_OF_FILES = 16
 NUMBER_OF_ROWS = 10000
 NUMBER_OF_COLUMNS = 256
 
-OUTPUT_FOLDER = "../../sample_data/csv/"
+OUTPUT_FOLDER = "../../data/input/csv/"
 
 for i in range(NUMBER_OF_FILES):
 
