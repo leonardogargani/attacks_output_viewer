@@ -53,7 +53,12 @@ class GraphWindow(QtWidgets.QMainWindow):
             self.peak_line = int(rows[byte_number][0])
 
         self.controller_window.create_scrollarea()
-        self.controller_window.label_2.setText('The peak is in correspondence of curve ' + str(self.peak_line) + '.')
+        if self.peak_line==-1:
+            self.controller_window.label_2.setText(
+                'Warning ! This file contains only NaN values.')
+        else:
+            self.controller_window.label_2.setText(
+                'The peak is in correspondence of curve ' + str(self.peak_line) + '.')
         self.controller_window.show()
 
     def add_curve(self, line_number):
