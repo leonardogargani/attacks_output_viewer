@@ -21,7 +21,6 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.peak_line = None
         self.correlation_values = None
         uic.loadUi(GRAPH_WINDOW_UI, self)
-        self.setWindowTitle('Detailed plot')
         self.lines = [None] * 256
         self.controller_window = controller_window.ControllerWindow(self)
 
@@ -53,11 +52,10 @@ class GraphWindow(QtWidgets.QMainWindow):
             self.peak_line = int(rows[byte_number][0])
 
         self.controller_window.create_scrollarea()
-        if self.peak_line==-1:
-            self.controller_window.label_2.setText(
-                'Warning ! This file contains only NaN values.')
+        if self.peak_line == -1:
+            self.controller_window.info_label.setText('WARNING! This file contains only NaN values.')
         else:
-            self.controller_window.label_2.setText(
+            self.controller_window.info_label.setText(
                 'The peak is in correspondence of curve ' + str(self.peak_line) + '.')
         self.controller_window.show()
 

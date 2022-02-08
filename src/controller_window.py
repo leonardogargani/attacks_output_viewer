@@ -12,7 +12,6 @@ class ControllerWindow(QtWidgets.QMainWindow):
         self.vbox = None
         self.widget = None
         uic.loadUi(CONTROLLER_WINDOW_UI, self)
-        self.setWindowTitle('Graph controller')
         self.pushButton.clicked.connect(self.clear_checks)
 
     def create_scrollarea(self):
@@ -29,7 +28,6 @@ class ControllerWindow(QtWidgets.QMainWindow):
 
         self.widget.setLayout(self.vbox)
         self.scrollArea.setWidget(self.widget)
-        self.setGeometry(600, 100, 300, 550)
 
     def click_checkbox(self, state, curve_number):
         if state == QtCore.Qt.Checked:

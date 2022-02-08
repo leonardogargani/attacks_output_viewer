@@ -20,7 +20,6 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.secondary_window = None
         uic.loadUi(MAIN_WINDOW_UI, self)
-        self.setWindowTitle('Byte selector')
         self.create_buttons()
 
     # overriding the closeEvent default function
