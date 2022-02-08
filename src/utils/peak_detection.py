@@ -8,10 +8,10 @@ matplotlib.use('agg')
 
 NPY_DIRECTORY = "../../data/output/npy/"
 PNG_DIRECTORY = "../../data/output/png/"
-TXT_DIRECTORY = "../../data/output/txt/"
+CSV_DIRECTORY = "../../data/output/csv/"
 
-xMax = np.empty((16,), dtype=int)
-yMax = np.empty((16,), dtype=np.float64)
+xMax = np.empty((16,),    dtype=int)
+yMax = np.empty((16,),    dtype=np.float64)
 lineMax = np.empty((16,), dtype=int)
 
 for byte_number in range(16):
@@ -24,8 +24,8 @@ for byte_number in range(16):
         print('[WARNING] File contains only NaN values, peak detection aborted')
 
         # Save results
-        xMax[byte_number] = -1
-        yMax[byte_number] = -1
+        xMax[byte_number]    = -1
+        yMax[byte_number]    = -1
         lineMax[byte_number] = -1
 
     else:
@@ -71,10 +71,10 @@ for byte_number in range(16):
         lineMax[byte_number] = line_number[0]
 
 # Write results to txt file
-if not os.path.exists(TXT_DIRECTORY):
-    os.makedirs(TXT_DIRECTORY, exist_ok=True)
+if not os.path.exists(CSV_DIRECTORY):
+    os.makedirs(CSV_DIRECTORY, exist_ok=True)
 
-f = open(TXT_DIRECTORY + 'peak.txt', 'w+')
+f = open(CSV_DIRECTORY + 'peak.csv', 'w+')
 for i in range(16):
     s = str(lineMax[i]) + ',' + str(xMax[i]) + ',' + str(yMax[i]) + '\r\n'
     f.write(s)
