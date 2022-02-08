@@ -47,7 +47,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         # - mode='subsample' (fastest but least accurate method)
         self.graph_widget.setDownsampling(ds=0.1, auto=True, mode='peak')
 
-        with open('../data/output/txt/peak.txt') as peaks_file:
+        with open('../data/output/csv/peak.csv') as peaks_file:
             csv_reader = csv.reader(peaks_file)
             rows = list(csv_reader)
             self.peak_line = int(rows[byte_number][0])
