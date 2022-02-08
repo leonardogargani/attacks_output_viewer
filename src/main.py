@@ -1,10 +1,11 @@
-"""
-Entry point for the program.
+"""Entry point for the program
+Start a new Qt application and show the main window of the program.
 """
 
 
 import sys
 from PyQt5 import QtWidgets
+
 import main_window
 
 
@@ -17,4 +18,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

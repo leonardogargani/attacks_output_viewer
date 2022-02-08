@@ -1,5 +1,5 @@
-"""
-Window containing the detailed plot of a single byte.
+"""Detailed plot of a byte
+Generate a detailed plot of a single byte. Show by default only the one line with the peak.
 """
 
 import numpy as np
@@ -8,6 +8,7 @@ from PyQt5 import QtWidgets, uic
 import csv
 
 import controller_window
+
 
 MAIN_WINDOW_UI = 'ui/main_window.ui'
 GRAPH_WINDOW_UI = 'ui/graph_window.ui'
@@ -18,15 +19,15 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(GraphWindow, self).__init__(*args, **kwargs)
+        uic.loadUi(GRAPH_WINDOW_UI, self)
         self.peak_line = None
         self.correlation_values = None
-        uic.loadUi(GRAPH_WINDOW_UI, self)
         self.lines = [None] * 256
         self.controller_window = controller_window.ControllerWindow(self)
 
         self.graph_widget.scene().sigMouseClicked.connect(self.graph_click)
 
-    # overriding the closeEvent default function
+    # Override the closeEvent function to close also the controller window
     def closeEvent(self, event):
         self.controller_window.close()
 
@@ -37,7 +38,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
         print('Generating the plot...')
 
-        # plot only data points that are currently visible (smooth when zoomed in)
+        # Plot only data points that are currently visible (smooth when zoomed in)
         self.graph_widget.setClipToView(True)
 
         # Enable downsampling with:
@@ -48,19 +49,18 @@ class GraphWindow(QtWidgets.QMainWindow):
 
         with open('../data/output/csv/peak.csv') as peaks_file:
             csv_reader = csv.reader(peaks_file)
-            rows = list(csv_reader)
-            self.peak_line = int(rows[byte_number][0])
+            csv_rows = list(csv_reader)
+            self.peak_line = int(csv_rows[byte_number][0])
 
+        label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
+            else 'The peak is in correspondence of curve ' + str(self.peak_line) + '.'
+
+        self.controller_window.info_label.setText(label_content)
         self.controller_window.create_scrollarea()
-        if self.peak_line == -1:
-            self.controller_window.info_label.setText('WARNING! This file contains only NaN values.')
-        else:
-            self.controller_window.info_label.setText(
-                'The peak is in correspondence of curve ' + str(self.peak_line) + '.')
         self.controller_window.show()
 
     def add_curve(self, line_number):
-        # plot a line with:
+        # Plot a line with:
         # - skipFiniteCheck=True (because we know that no NaN values are in our data this help speed up plot time)
         # - clickable=True (make the curve clickable: when clicked, the signal sigClicked is emitted)
         self.lines[line_number] = self.graph_widget.plot(self.correlation_values[:, line_number],
@@ -70,7 +70,5 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def remove_curve(self, line_number):
         self.lines[line_number].clear()
-        print('done')
-        # force window activation to fix PyQt bug, which would require me to click
-        # the graph window to gain the focus at OS system
+        # Force window activation so that I don't have to click the graph to gain focus and make it update
         self.activateWindow()
