@@ -21,6 +21,8 @@ class GraphWindow(QtWidgets.QMainWindow):
         super(GraphWindow, self).__init__(*args, **kwargs)
         uic.loadUi(GRAPH_WINDOW_UI, self)
         self.peak_line = None
+        self.peak_x = None
+        self.peak_y = None
         self.correlation_values = None
         self.lines = [None] * 256
         self.controller_window = controller_window.ControllerWindow(self)
@@ -54,9 +56,14 @@ class GraphWindow(QtWidgets.QMainWindow):
             csv_reader = csv.reader(peaks_file)
             csv_rows = list(csv_reader)
             self.peak_line = int(csv_rows[byte_number][0])
+            self.peak_x = int(csv_rows[byte_number][1])
+            self.peak_y = float(csv_rows[byte_number][2])
 
         label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
             else 'The peak is in correspondence of curve ' + str(self.peak_line) + '.'
+
+        self.graph_widget.addLine(x=self.peak_x)
+        self.graph_widget.addLine(y=self.peak_y)
 
         self.controller_window.info_label.setText(label_content)
         self.controller_window.create_scrollarea()
@@ -72,6 +79,7 @@ class GraphWindow(QtWidgets.QMainWindow):
                                                          clickable=True,
                                                          name=str(line_number))
         self.lines[line_number].sigClicked.connect(self.line_click)
+
 
 
     def remove_curve(self, line_number):
