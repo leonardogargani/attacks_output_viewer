@@ -25,7 +25,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.lines = [None] * 256
         self.controller_window = controller_window.ControllerWindow(self)
 
-        self.graph_widget.scene().sigMouseClicked.connect(self.graph_click)
+        #self.graph_widget.scene().sigMouseClicked.connect(self.graph_click)
 
     # Override the closeEvent function to close also the controller window
     def closeEvent(self, event):
@@ -33,6 +33,9 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def graph_click(self, click):
         print('clicked on ' + str(click.pos().x()) + ' | ' + str(click.pos().y()))
+
+    def line_click(self, item, points):
+        print("Line number " + item.name() + " clicked on x = {:.3f} y = {:.3f}".format(points.pos().x(), points.pos().y()))
 
     def generate_plot(self, byte_number):
         self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
@@ -66,7 +69,10 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.lines[line_number] = self.graph_widget.plot(self.correlation_values[:, line_number],
                                                          pen=pg.intColor(line_number),
                                                          skipFiniteCheck=True,
-                                                         clickable=True)
+                                                         clickable=True,
+                                                         name=str(line_number))
+        self.lines[line_number].sigClicked.connect(self.line_click)
+
 
     def remove_curve(self, line_number):
         self.lines[line_number].clear()
