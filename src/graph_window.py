@@ -8,7 +8,7 @@ from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QCheckBox
 import csv
 
-GRAPH_WINDOW_UI = 'ui/graph_window_new.ui'
+GRAPH_WINDOW_UI = 'ui/graph_window.ui'
 NPY_DIRECTORY = "../data/output/npy/"
 
 
