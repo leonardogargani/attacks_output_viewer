@@ -4,10 +4,12 @@ Generate a detailed plot of a single byte. Show by default only the one line wit
 
 import numpy as np
 import pyqtgraph as pg
-from PyQt5 import QtWidgets, uic, QtCore
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QCheckBox
+from PyQt5 import QtWidgets, uic
 import csv
 
+import controller_window
+
+MAIN_WINDOW_UI = 'ui/main_window.ui'
 GRAPH_WINDOW_UI = 'ui/graph_window_new.ui'
 NPY_DIRECTORY = "../data/output/npy/"
 
@@ -22,8 +24,11 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.peak_y = None
         self.correlation_values = None
         self.lines = [None] * 256
-        self.vbox = None
-        self.pushButton.clicked.connect(self.clear_checks)
+        self.controller_window = controller_window.ControllerWindow(self)
+
+    # Override the closeEvent function to close also the controller window
+    def closeEvent(self, event):
+        self.controller_window.close()
 
     def line_click(self, item, points):
         print("Line number " + item.name() + " clicked on x = {:.3f} y = {:.3f}".format(points.pos().x(),
@@ -57,9 +62,9 @@ class GraphWindow(QtWidgets.QMainWindow):
         label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
             else 'The peak is in correspondence of curve ' + str(self.peak_line) + '.'
 
-        self.info_label.setText(label_content)
-        self.create_scrollarea()
-        self.show()
+        self.controller_window.info_label.setText(label_content)
+        self.controller_window.create_scrollarea()
+        self.controller_window.show()
 
     def add_curve(self, line_number):
         # Plot a line with:
@@ -75,35 +80,5 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def remove_curve(self, line_number):
         self.lines[line_number].clear()
-        # Plot a "dumb" point so that the widget is refreshed and the removed curve is disappeared
-        self.graph_widget.plot([0], [0])
-
-    # the line with the peak is created by this function
-    def create_scrollarea(self):
-        self.vbox = QVBoxLayout()
-
-        for line_num in range(256):
-            checkbox = QCheckBox("curve " + str(line_num))
-            checkbox.stateChanged.connect(lambda state, x=line_num: self.click_checkbox(state, x))
-            # At first, check only the line with the peak
-            if line_num == self.peak_line:
-                checkbox.setChecked(True)
-            self.vbox.addWidget(checkbox)
-
-        widget = QWidget()
-        widget.setLayout(self.vbox)
-        self.scrollArea.setWidget(widget)
-        self.scrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-
-    def click_checkbox(self, state, curve_number):
-        if state == QtCore.Qt.Checked:
-            self.add_curve(curve_number)
-        else:
-            self.remove_curve(curve_number)
-
-    def clear_checks(self):
-        for i in range(256):
-            checkbox = self.vbox.itemAt(i).widget()
-            if checkbox.isChecked:
-                checkbox.setChecked(False)
-
+        # Force window activation so that I don't have to click the graph to gain focus and make it update
+        self.activateWindow()

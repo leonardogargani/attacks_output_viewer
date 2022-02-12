@@ -5,6 +5,7 @@ Create a controller where each checkbox shows/hides a single line in the detaile
 from PyQt5 import QtWidgets, uic, QtCore
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QCheckBox
 
+
 CONTROLLER_WINDOW_UI = 'ui/controller_window.ui'
 
 

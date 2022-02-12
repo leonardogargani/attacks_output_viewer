@@ -8,7 +8,9 @@ from PyQt5 import QtWidgets, uic
 
 import graph_window
 
+
 MAIN_WINDOW_UI = 'ui/main_window.ui'
+GRAPH_WINDOW_UI = 'ui/graph_window.ui'
 NPY_DIRECTORY = "../data/output/npy/"
 
 
@@ -49,6 +51,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def plot_byte(self, byte_number):
         self.graph_window = graph_window.GraphWindow()
-        self.graph_window.byte_label.setText("Byte #" + str(byte_number).zfill(2))
+        self.graph_window.top_label.setText("Byte #" + str(byte_number).zfill(2))
         self.graph_window.init_empty_plot(byte_number)
         self.graph_window.show()
