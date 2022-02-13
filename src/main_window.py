@@ -1,4 +1,5 @@
 """Main window of the program
+
 Create a button for each CSV file that is found. If clicked, the button shows a detailed plot.
 """
 
@@ -13,6 +14,7 @@ NPY_DIRECTORY = "../data/output/npy/"
 
 
 class MainWindow(QtWidgets.QMainWindow):
+    """Window containing all the buttons to plot each one of the bytes."""
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
@@ -22,11 +24,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # Override the closeEvent function to close also all the graph windows
     def closeEvent(self, event):
+        """Close all the windows with plots when the current window is closed (override default closeEvent function)."""
         if self.graph_windows:
             for window in self.graph_windows:
                 window.close()
 
     def create_buttons(self):
+        """Create a matrix of buttons (that plot bytes), each one for every npy file corresponding to a byte."""
         filenames = [f for f in os.listdir(NPY_DIRECTORY) if f.endswith('.npy')]
         row_index = 0
         column_index = 0
@@ -49,9 +53,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 column_index += 1
 
     def plot_byte(self, byte_number):
+        """Plot a byte in a new window."""
         window = graph_window.GraphWindow()
         window.byte_label.setText("Byte #" + str(byte_number).zfill(2))
         window.init_empty_plot(byte_number)
+        window.create_scrollarea()
         window.show()
         self.graph_windows.append(window)
 
