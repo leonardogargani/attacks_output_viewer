@@ -16,14 +16,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
-        self.graph_window = None
+        self.graph_windows = []
         uic.loadUi(MAIN_WINDOW_UI, self)
         self.create_buttons()
 
-    # Override the closeEvent function to close also the graph window
+    # Override the closeEvent function to close also all the graph windows
     def closeEvent(self, event):
-        if self.graph_window is not None:
-            self.graph_window.close()
+        if self.graph_windows:
+            for window in self.graph_windows:
+                window.close()
 
     def create_buttons(self):
         filenames = [f for f in os.listdir(NPY_DIRECTORY) if f.endswith('.npy')]
@@ -48,7 +49,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 column_index += 1
 
     def plot_byte(self, byte_number):
-        self.graph_window = graph_window.GraphWindow()
-        self.graph_window.byte_label.setText("Byte #" + str(byte_number).zfill(2))
-        self.graph_window.init_empty_plot(byte_number)
-        self.graph_window.show()
+        window = graph_window.GraphWindow()
+        window.byte_label.setText("Byte #" + str(byte_number).zfill(2))
+        window.init_empty_plot(byte_number)
+        window.show()
+        self.graph_windows.append(window)
+

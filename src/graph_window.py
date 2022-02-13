@@ -1,5 +1,6 @@
 """Detailed plot of a byte
-Generate a detailed plot of a single byte. Show by default only the one line with the peak.
+Generate a detailed plot of a single byte with a list of checkboxes to choose which lines to plot.
+Show by default only the one line with the peak.
 """
 
 import numpy as np
@@ -17,11 +18,9 @@ class GraphWindow(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super(GraphWindow, self).__init__(*args, **kwargs)
         uic.loadUi(GRAPH_WINDOW_UI, self)
-        self.peak_line = None
-        self.peak_x = None
-        self.peak_y = None
         self.correlation_values = None
         self.lines = [None] * 256
+        self.peak_line = None
         self.vbox = None
         self.pushButton.clicked.connect(self.clear_checks)
 
@@ -31,28 +30,26 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def init_empty_plot(self, byte_number):
         self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
-        print('Generating the plot...')
 
         # Plot only data points that are currently visible (smooth when zoomed in)
         self.graph_widget.setClipToView(True)
 
         # Enable downsampling with:
-        # - ds=0.1 (reduction factor for the visible samples)
-        # - auto=True (automatically pick ds based on visible range)
+        # - auto=True (automatically pick reduction factor for the visible samples based on visible range)
         # - mode='subsample' (fastest but least accurate method)
-        self.graph_widget.setDownsampling(ds=0.1, auto=True, mode='peak')
+        self.graph_widget.setDownsampling(auto=True, mode='peak')
 
         with open('../data/output/csv/peak.csv') as peaks_file:
             csv_reader = csv.reader(peaks_file)
             csv_rows = list(csv_reader)
             self.peak_line = int(csv_rows[byte_number][0])
-            self.peak_x = int(csv_rows[byte_number][1])
-            self.peak_y = float(csv_rows[byte_number][2])
+            peak_x = int(csv_rows[byte_number][1])
+            peak_y = float(csv_rows[byte_number][2])
 
-        # highlight peak
-        self.graph_widget.addLine(x=self.peak_x)
-        self.graph_widget.addLine(y=self.peak_y)
-        self.graph_widget.plot([self.peak_x], [self.peak_y], symbol='o', symbolSize=15)
+        # Highlight peak with two lines and a circle
+        self.graph_widget.addLine(x=peak_x)
+        self.graph_widget.addLine(y=peak_y)
+        self.graph_widget.plot([peak_x], [peak_y], symbol='o', symbolSize=15)
 
         label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
             else 'The peak is in correspondence of curve ' + str(self.peak_line) + '.'
@@ -60,23 +57,6 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.info_label.setText(label_content)
         self.create_scrollarea()
         self.show()
-
-    def add_curve(self, line_number):
-        # Plot a line with:
-        # - skipFiniteCheck=True (because we know that no NaN values are in our data this help speed up plot time)
-        # - clickable=True (make the curve clickable: when clicked, the signal sigClicked is emitted)
-        self.lines[line_number] = self.graph_widget.plot(self.correlation_values[:, line_number],
-                                                         pen=pg.intColor(line_number),
-                                                         skipFiniteCheck=True,
-                                                         clickable=True,
-                                                         hoverable=True,
-                                                         name=str(line_number))
-        self.lines[line_number].sigClicked.connect(self.line_click)
-
-    def remove_curve(self, line_number):
-        self.lines[line_number].clear()
-        # Plot a "dumb" point so that the widget is refreshed and the removed curve is disappeared
-        self.graph_widget.plot([0], [0])
 
     # the line with the peak is created by this function
     def create_scrollarea(self):
@@ -107,3 +87,15 @@ class GraphWindow(QtWidgets.QMainWindow):
             if checkbox.isChecked:
                 checkbox.setChecked(False)
 
+    def add_curve(self, line_number):
+        self.lines[line_number] = self.graph_widget.plot(self.correlation_values[:, line_number],
+                                                         pen=pg.intColor(line_number),
+                                                         skipFiniteCheck=True,
+                                                         clickable=True,
+                                                         name=str(line_number))
+        self.lines[line_number].sigClicked.connect(self.line_click)
+
+    def remove_curve(self, line_number):
+        self.lines[line_number].clear()
+        # Plot a "dumb" point so that the widget is refreshed and the removed curve is disappeared
+        self.graph_widget.plot([0], [0])
