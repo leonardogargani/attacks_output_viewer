@@ -23,7 +23,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         super(GraphWindow, self).__init__(*args, **kwargs)
         uic.loadUi(GRAPH_WINDOW_UI, self)
         self.correlation_values = None
-        self.lines = [None] * 256
+        self.lines = None
         self.peak_line = None
         self.vbox = None
         self.pushButton.clicked.connect(self.clear_checks)
@@ -36,6 +36,7 @@ class GraphWindow(QtWidgets.QMainWindow):
     def init_empty_plot(self, byte_number):
         """Initialize an empty plot of a byte where only the peak is highlighted."""
         self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
+        self.lines = [None] * self.correlation_values.shape[1]
 
         # Plot only data points that are currently visible (smooth when zoomed in)
         self.graph_widget.setClipToView(True)
@@ -66,7 +67,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         """Create the scrollArea with the checkboxes to control the lines to plot, and check the line with the peak."""
         self.vbox = QVBoxLayout()
 
-        for line_num in range(256):
+        for line_num in range(self.correlation_values.shape[1]):
             checkbox = QCheckBox("curve " + str(line_num))
             checkbox.stateChanged.connect(lambda state, x=line_num: self.click_checkbox(state, x))
             # At first, check only the line with the peak
@@ -88,7 +89,7 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def clear_checks(self):
         """Clear all the checks from the checkboxes in the scrollArea."""
-        for i in range(256):
+        for i in range(self.correlation_values.shape[1]):
             checkbox = self.vbox.itemAt(i).widget()
             if checkbox.isChecked:
                 checkbox.setChecked(False)
