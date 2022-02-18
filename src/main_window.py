@@ -37,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for filename in sorted(filenames):
             byte_num = int(os.path.splitext(filename)[0])
 
-            button = QtWidgets.QPushButton('Byte ' + str(byte_num))
+            button = QtWidgets.QPushButton(f'Byte {byte_num}')
             button.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
             button.setToolTip('click to show the plot')
             # Due to python's scoping rules and closures, we need to capture byte_num
@@ -55,7 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def plot_byte(self, byte_number):
         """Plot a byte in a new window."""
         window = graph_window.GraphWindow()
-        window.byte_label.setText("Byte #" + str(byte_number).zfill(2))
+        window.byte_label.setText(f'Byte #{str(byte_number).zfill(2)}')
         window.init_empty_plot(byte_number)
         window.create_scrollarea()
         window.show()

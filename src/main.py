@@ -1,4 +1,5 @@
 """Entry point for the program
+
 Start a new Qt application and show the main window of the program.
 """
 

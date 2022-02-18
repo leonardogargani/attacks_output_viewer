@@ -36,9 +36,9 @@ python main.py
 ## Features to implement
 
 The requested features that need to be implemented are the following:
-- [ ] Smooth zoom and scrolling
+- [x] Smooth zoom and scrolling
 - [ ] Popup labels on mouse pointing
 - [ ] Signal generation on click (propagate x, y, plot info data)
-- [ ] Control over the X-range
-- [ ] Control over the plotted lines to show/hide
-- [ ] Highlights of peaks
+- [x] Control over the X-range
+- [x] Control over the plotted lines to show/hide
+- [x] Highlights of peaks

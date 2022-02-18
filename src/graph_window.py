@@ -30,12 +30,11 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def line_click(self, item, points):
         """Print the coordinates of the point on the plot which is clicked by the user."""
-        print("Line number " + item.name() + " clicked on x = {:.3f} y = {:.3f}".format(points.pos().x(),
-                                                                                        points.pos().y()))
+        print(f'Line number {item.name()} clicked on (x={points.pos().x():.3f}, y={points.pos().y():.3f})')
 
     def init_empty_plot(self, byte_number):
         """Initialize an empty plot of a byte where only the peak is highlighted."""
-        self.correlation_values = np.load(NPY_DIRECTORY + str(byte_number).zfill(2) + '.npy', mmap_mode='r')
+        self.correlation_values = np.load(f'{NPY_DIRECTORY}{str(byte_number).zfill(2)}.npy', mmap_mode='r')
         self.lines = [None] * self.correlation_values.shape[1]
 
         # Plot only data points that are currently visible (smooth when zoomed in)
@@ -59,7 +58,7 @@ class GraphWindow(QtWidgets.QMainWindow):
             self.graph_widget.plot([peak_x], [peak_y], symbol='o', symbolSize=15)
 
         label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
-            else 'The peak is in correspondence of curve ' + str(self.peak_line) + '.'
+            else f'The peak is in correspondence of curve {self.peak_line}.'
 
         self.info_label.setText(label_content)
 
@@ -68,7 +67,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.vbox = QVBoxLayout()
 
         for line_num in range(self.correlation_values.shape[1]):
-            checkbox = QCheckBox("curve " + str(line_num))
+            checkbox = QCheckBox(f'curve {line_num}')
             checkbox.stateChanged.connect(lambda state, x=line_num: self.click_checkbox(state, x))
             # At first, check only the line with the peak
             if line_num == self.peak_line:
