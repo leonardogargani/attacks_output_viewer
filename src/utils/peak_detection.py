@@ -52,7 +52,7 @@ for byte_number in range(16):
             ax = plt.gca()
             xmax = index[0]
             ymax = peak
-            text = "x={}, y={:.3f}".format(xmax, ymax)
+            text = "Line {}, x={}, y={:.3f}".format(line_number[0], xmax, ymax)
             bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
             arrowprops = dict(arrowstyle="->", connectionstyle="angle,angleA=0,angleB=60")
             kw = dict(xycoords='data', textcoords="axes fraction",
