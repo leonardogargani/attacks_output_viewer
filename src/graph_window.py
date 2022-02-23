@@ -30,7 +30,10 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def line_click(self, item, points):
         """Print the coordinates of the point on the plot which is clicked by the user."""
-        print(f'Line number {item.name()} clicked on (x={points.pos().x():.3f}, y={points.pos().y():.3f})')
+        x = int(np.floor(points.pos().x()))
+        y = self.correlation_values[:, int(item.name())][x]
+        print(f'Line number {item.name()} clicked on (x={x}, y={y:.3f})')
+
 
     def init_empty_plot(self, byte_number):
         """Initialize an empty plot of a byte where only the peak is highlighted."""
