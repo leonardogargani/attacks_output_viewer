@@ -1,0 +1,24 @@
+Here are some useful measurements about execution time and memory usage of the program.
+
+All the tests have been performed on a machine with an i7-7500U (dual-core @ 2.70 GHz) CPU and 8 GB of RAM.
+
+The 16 CSV files, each one with 256 columns and ~35k rows, are converted to NPY files.
+
+
+csv_to_npy_converter.py
+    - execution time: 1m55s
+    - memory usage: 1.1 GB
+
+peak_detection.py
+    - execution time: 2m10s
+    - memory usage: 550 MB
+
+main.py:
+    - execution time: -
+    - memory usage:
+        - main window: 125 MB
+        - each new plot:
+            - loading the .npy file: 65 MB
+            - window creation: 5 MB
+            - each displayed line: 1 MB
+
