@@ -7,6 +7,7 @@ Show by default only the one line with the peak.
 import numpy as np
 import pyqtgraph as pg
 from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QCheckBox
 import csv
 
@@ -15,8 +16,12 @@ NPY_DIRECTORY = '../data/output/npy/'
 PEAKS_CSV = '../data/output/csv/peak.csv'
 
 
+
 class GraphWindow(QtWidgets.QMainWindow):
     """Window containing a plot of a byte and a selector for the lines to plot."""
+
+    # Create a custom signal with corresponding arguments
+    message = pyqtSignal(int, float, str)
 
     def __init__(self, *args, **kwargs):
         """Class constructor."""
@@ -27,11 +32,16 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.peak_line = None
         self.vbox = None
         self.pushButton.clicked.connect(self.clear_checks)
+        self.message.connect(self.msg_callback)
+
+    def msg_callback(self, x, y, line):
+        print(f"Custom signal received with values x = {x}, y = {y} and line number {line}")
 
     def line_click(self, item, points):
         """Print the coordinates of the point on the plot which is clicked by the user."""
         x = int(np.floor(points.pos().x()))
         y = self.correlation_values[:, int(item.name())][x]
+        self.message.emit(x, y, item.name())
         print(f'Line number {item.name()} clicked on (x={x}, y={y:.3f})')
 
 
@@ -104,6 +114,7 @@ class GraphWindow(QtWidgets.QMainWindow):
                                                          clickable=True,
                                                          name=str(line_number))
         self.lines[line_number].sigClicked.connect(self.line_click)
+
 
     def remove_curve(self, line_number):
         """Delete the plot of one line of a byte."""
