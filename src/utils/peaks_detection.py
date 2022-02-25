@@ -82,4 +82,6 @@ try:
 
 except FileNotFoundError:
     print('[ERROR] No .npy file found. Run "csv_to_npy_conversion.py" script before.')
+    os.rmdir(PNG_DIRECTORY)
+    os.rmdir(CSV_DIRECTORY)
     exit()

@@ -27,4 +27,5 @@ try:
 
 except FileNotFoundError:
     print('[ERROR] No .csv file found. Place your .csv files in the data/input/csv/ directory before.')
+    os.rmdir(NPY_DIRECTORY)
     exit()

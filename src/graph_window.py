@@ -13,8 +13,7 @@ import csv
 
 GRAPH_WINDOW_UI = 'ui/graph_window.ui'
 NPY_DIRECTORY = '../data/output/npy/'
-PEAKS_CSV = '../data/output/csv/peak.csv'
-
+PEAKS_CSV = '../data/output/csv/peaks.csv'
 
 
 class GraphWindow(QtWidgets.QMainWindow):
@@ -33,6 +32,14 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.vbox = None
         self.pushButton.clicked.connect(self.clear_checks)
         self.message.connect(self.msg_callback)
+        self.graph_widget.scene().sigMouseMoved.connect(self.mouseover)
+
+    def mouseover(self, pos):
+        for i in range(self.correlation_values.shape[1]):
+            checkbox = self.vbox.itemAt(i).widget()
+            if checkbox.isChecked():
+                print(self.lines[i].mapFromScene(pos).x(), self.lines[i].mapFromScene(pos).y())
+                break
 
     def msg_callback(self, x, y, line):
         print(f"Custom signal received with values x = {x}, y = {y} and line number {line}")
@@ -43,7 +50,6 @@ class GraphWindow(QtWidgets.QMainWindow):
         y = self.correlation_values[:, int(item.name())][x]
         self.message.emit(x, y, item.name())
         print(f'Line number {item.name()} clicked on (x={x}, y={y:.3f})')
-
 
     def init_empty_plot(self, byte_number):
         """Initialize an empty plot of a byte where only the peak is highlighted."""
@@ -114,7 +120,6 @@ class GraphWindow(QtWidgets.QMainWindow):
                                                          clickable=True,
                                                          name=str(line_number))
         self.lines[line_number].sigClicked.connect(self.line_click)
-
 
     def remove_curve(self, line_number):
         """Delete the plot of one line of a byte."""
