@@ -39,6 +39,9 @@ for byte_number in range(16):
         correlation_values[np.isnan(correlation_values)] = 0
 
         peak = np.nanmax(correlation_values)
+        min_val = np.nanmin(correlation_values)
+        if abs(min_val)>peak:
+            peak = min_val
         index, line_number = np.where(correlation_values == peak)
 
         print(f'Peak value    = {peak}')  # Ymax
@@ -52,10 +55,10 @@ for byte_number in range(16):
 
             fig = plt.figure(figsize=(12, 4))
             plt.plot(correlation_values)
-            plt.ylim([-1, 1.3])
             ax = plt.gca()
             xmax = index[0]
             ymax = peak
+            plt.ylim([-1.5*abs(peak), 1.5*abs(peak)])
             text = f'Line {line_number[0]}, x={xmax}, y={ymax:.3f}'
             bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
             arrowprops = dict(arrowstyle="->", connectionstyle="angle,angleA=0,angleB=60")
