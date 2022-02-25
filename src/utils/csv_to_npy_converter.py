@@ -1,5 +1,7 @@
-"""
-Script that converts CSV files to NPY files.
+"""Script to convert .csv files to .npy
+
+Script that converts .csv files to .npy as a preprocessing step, so that data is optimized
+both from loading time and memory usage perspectives.
 """
 
 import os

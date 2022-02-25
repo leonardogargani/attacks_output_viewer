@@ -146,6 +146,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="toolTip">
+       <string extracomment="Uncheck and remove all the curves"/>
+      </property>
       <property name="text">
        <string>Clear all</string>
       </property>

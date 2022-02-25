@@ -1,0 +1,1 @@
+Inside this directory you will find all the automatically generated files.
