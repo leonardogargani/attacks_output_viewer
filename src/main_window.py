@@ -31,26 +31,31 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def create_buttons(self):
         """Create a matrix of buttons (that plot bytes), each one for every npy file corresponding to a byte."""
-        filenames = [f for f in os.listdir(NPY_DIRECTORY) if f.endswith('.npy')]
-        row_index = 0
-        column_index = 0
-        for filename in sorted(filenames):
-            byte_num = int(os.path.splitext(filename)[0])
+        try:
+            filenames = [f for f in os.listdir(NPY_DIRECTORY) if f.endswith('.npy')]
+            row_index = 0
+            column_index = 0
+            for filename in sorted(filenames):
+                byte_num = int(os.path.splitext(filename)[0])
 
-            button = QtWidgets.QPushButton(f'Byte {byte_num}')
-            button.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
-            button.setToolTip('click to show the plot')
-            # Due to python's scoping rules and closures, we need to capture byte_num
-            button.clicked.connect(lambda state, x=byte_num: self.plot_byte(x))
+                button = QtWidgets.QPushButton(f'Byte {byte_num}')
+                button.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                button.setToolTip('click to show the plot')
+                # Due to python's scoping rules and closures, we need to capture byte_num
+                button.clicked.connect(lambda state, x=byte_num: self.plot_byte(x))
 
-            self.gridLayout.addWidget(button, row_index, column_index)
+                self.gridLayout.addWidget(button, row_index, column_index)
 
-            # Place the buttons in rows of 4 elements
-            if (column_index % 3 == 0) and (column_index != 0):
-                row_index += 1
-                column_index = 0
-            else:
-                column_index += 1
+                # Place the buttons in rows of 4 elements
+                if (column_index % 3 == 0) and (column_index != 0):
+                    row_index += 1
+                    column_index = 0
+                else:
+                    column_index += 1
+
+        except FileNotFoundError:
+            print('[ERROR] No .npy file found. Run the two initial scripts before.')
+            exit()
 
     def plot_byte(self, byte_number):
         """Plot a byte in a new window."""

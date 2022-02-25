@@ -13,13 +13,18 @@ NPY_DIRECTORY = "../../data/output/npy/"
 
 os.makedirs(NPY_DIRECTORY, exist_ok=True)
 
-# If not already done, convert real csv files to npy format
-for byte_number in range(16):
-    filename = str(byte_number)
-    print(f'Converting {filename}.csv into npy...')
-    # "NaN" values are replaced by 0
-    correlation_values = np.genfromtxt(f'{CSV_DIRECTORY}{filename}.csv', delimiter=',', filling_values=0)
-    # Save to npy format
-    np.save(f'{NPY_DIRECTORY}{filename.zfill(2)}', correlation_values)
+try:
+    # If not already done, convert real csv files to npy format
+    for byte_number in range(16):
+        filename = str(byte_number)
+        # "NaN" values are replaced by 0
+        correlation_values = np.genfromtxt(f'{CSV_DIRECTORY}{filename}.csv', delimiter=',', filling_values=0)
+        # Save to npy format
+        print(f'Converting {filename}.csv into npy...')
+        np.save(f'{NPY_DIRECTORY}{filename.zfill(2)}', correlation_values)
 
-print('Done.')
+    print('Done.')
+
+except FileNotFoundError:
+    print('[ERROR] No .csv file found. Place your .csv files in the data/input/csv/ directory before.')
+    exit()
