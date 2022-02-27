@@ -58,7 +58,12 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def init_empty_plot(self, byte_number):
         """Initialize an empty plot of a byte where only the peak is highlighted."""
-        self.correlation_values = np.load(f'{NPY_DIRECTORY}{str(byte_number).zfill(2)}.npy', mmap_mode='r')
+        try:
+            self.correlation_values = np.load(f'{NPY_DIRECTORY}{str(byte_number).zfill(2)}.npy', mmap_mode='r')
+        except FileNotFoundError:
+            print('[ERROR] .npy file not found. Run the two initial scripts before.')
+            exit()
+
         self.lines = [None] * self.correlation_values.shape[1]
 
         # Plot only data points that are currently visible (smooth when zoomed in)
@@ -69,26 +74,31 @@ class GraphWindow(QtWidgets.QMainWindow):
         # - mode='subsample' (fastest but least accurate method)
         self.graph_widget.setDownsampling(auto=True, mode='peak')
 
-        with open(PEAKS_CSV) as peaks_file:
-            csv_reader = csv.reader(peaks_file)
-            csv_rows = list(csv_reader)
-            self.peak_line = int(csv_rows[byte_number][0])
-            peak_x = int(csv_rows[byte_number][1])
-            peak_y = float(csv_rows[byte_number][2])
+        try:
+            with open(PEAKS_CSV) as peaks_file:
+                csv_reader = csv.reader(peaks_file)
+                csv_rows = list(csv_reader)
+                self.peak_line = int(csv_rows[byte_number][0])
+                peak_x = int(csv_rows[byte_number][1])
+                peak_y = float(csv_rows[byte_number][2])
 
-            text = pg.TextItem(
-                html='<div style="text-align: center"><span style="color: #FFF;">Peak value',
-                anchor=(-0.3, 0.5), angle=0, border='w', fill=(0, 0, 255, 100))
-            self.graph_widget.addItem(text)
-            text.setPos(peak_x, peak_y)
+                text = pg.TextItem(
+                    html='<div style="text-align: center"><span style="color: #FFF;">Peak value',
+                    anchor=(-0.3, 0.5), angle=0, border='w', fill=(0, 0, 255, 100))
+                self.graph_widget.addItem(text)
+                text.setPos(peak_x, peak_y)
 
-            arrow = pg.ArrowItem(pos=(peak_x, peak_y), angle=0)
-            self.graph_widget.addItem(arrow)
+                arrow = pg.ArrowItem(pos=(peak_x, peak_y), angle=0)
+                self.graph_widget.addItem(arrow)
 
-        label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
-            else f'The peak is in correspondence of curve {self.peak_line}.'
+            label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
+                else f'The peak is in correspondence of curve {self.peak_line}.'
 
-        self.info_label.setText(label_content)
+            self.info_label.setText(label_content)
+
+        except FileNotFoundError:
+            print('[ERROR] peaks.csv file not found. Run the two initial scripts before.')
+            exit()
 
     def create_scrollarea(self):
         """Create the scrollArea with the checkboxes to control the lines to plot, and check the line with the peak."""
