@@ -40,6 +40,12 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.graph_widget.addItem(self.hLine, ignoreBounds=True)
         self.graph_widget.scene().sigMouseMoved.connect(self.mouse_moved)
 
+        # Peak position
+        self.text = None
+        self.arrow = None
+        self.peak_x = None
+        self.peak_y = None
+
     def mouse_moved(self, event):
         mouse_point = self.graph_widget.mapToView(event)
         self.vLine.setPos(mouse_point.x())
@@ -79,17 +85,8 @@ class GraphWindow(QtWidgets.QMainWindow):
                 csv_reader = csv.reader(peaks_file)
                 csv_rows = list(csv_reader)
                 self.peak_line = int(csv_rows[byte_number][0])
-                peak_x = int(csv_rows[byte_number][1])
-                peak_y = float(csv_rows[byte_number][2])
-
-                text = pg.TextItem(
-                    html='<div style="text-align: center"><span style="color: #FFF;">Peak value',
-                    anchor=(-0.3, 0.5), angle=0, border='w', fill=(0, 0, 255, 100))
-                self.graph_widget.addItem(text)
-                text.setPos(peak_x, peak_y)
-
-                arrow = pg.ArrowItem(pos=(peak_x, peak_y), angle=0)
-                self.graph_widget.addItem(arrow)
+                self.peak_x = int(csv_rows[byte_number][1])
+                self.peak_y = float(csv_rows[byte_number][2])
 
             label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
                 else f'The peak is in correspondence of curve {self.peak_line}.'
@@ -126,6 +123,11 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def clear_checks(self):
         """Clear all the checks from the checkboxes in the scrollArea."""
+
+        # Remove peak value arrow and text
+        self.graph_widget.removeItem(self.arrow)
+        self.graph_widget.removeItem(self.text)
+
         for i in range(self.correlation_values.shape[1]):
             checkbox = self.vbox.itemAt(i).widget()
             if checkbox.isChecked:
@@ -140,8 +142,22 @@ class GraphWindow(QtWidgets.QMainWindow):
                                                          name=str(line_number))
         self.lines[line_number].sigClicked.connect(self.line_click)
 
+        # Add peak value arrow and text if it is the corresponding line
+        if line_number == self.peak_line:
+            self.text = pg.TextItem(
+                html='<div style="text-align: center"><span style="color: #FFF;">Peak value',
+                anchor=(-0.3, 0.5), angle=0, border='w', fill=(0, 0, 255, 100))
+            self.graph_widget.addItem(self.text)
+            self.text.setPos(self.peak_x, self.peak_y)
+
+            self.arrow = pg.ArrowItem(pos=(self.peak_x, self.peak_y), angle=0)
+            self.graph_widget.addItem(self.arrow)
+
+
     def remove_curve(self, line_number):
         """Delete the plot of one line of a byte."""
         self.lines[line_number].clear()
         # Plot a "dumb" point so that the widget is refreshed and the removed curve is disappeared
         self.graph_widget.plot([0], [0])
+
+
