@@ -40,12 +40,11 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.graph_widget.addItem(self.hLine, ignoreBounds=True)
         self.graph_widget.scene().sigMouseMoved.connect(self.mouse_moved)
 
-    def mouse_moved(self, evt):
-        mouse_point = self.graph_widget.mapToView(evt)
+    def mouse_moved(self, event):
+        mouse_point = self.graph_widget.mapToView(event)
         self.vLine.setPos(mouse_point.x())
         self.hLine.setPos(mouse_point.y())
-        # THIS IS THE INFO LABEL THAT NEEDS A NEW PLACE TO BE WRITTEN
-        self.info_label.setText(f'x={mouse_point.x():.3f}, y={mouse_point.y():.3f}')
+        self.mouse_position_label.setText(f'x={int(mouse_point.x())}, y={mouse_point.y():.3f}')
 
     def msg_callback(self, x, y, line):
         print(f"Custom signal received with values x = {x}, y = {y} and line number {line}")
@@ -77,24 +76,19 @@ class GraphWindow(QtWidgets.QMainWindow):
             peak_x = int(csv_rows[byte_number][1])
             peak_y = float(csv_rows[byte_number][2])
 
-            # Highlight peak with two lines and a circle --> NOT USED ANYMORE
-            #self.graph_widget.addLine(x=peak_x)
-            #self.graph_widget.addLine(y=peak_y)
-            #self.graph_widget.plot([peak_x], [peak_y], symbol='o', symbolSize=15)
-
             text = pg.TextItem(
                 html='<div style="text-align: center"><span style="color: #FFF;">Peak value',
                 anchor=(-0.3, 0.5), angle=0, border='w', fill=(0, 0, 255, 100))
             self.graph_widget.addItem(text)
             text.setPos(peak_x, peak_y)
+
             arrow = pg.ArrowItem(pos=(peak_x, peak_y), angle=0)
             self.graph_widget.addItem(arrow)
 
         label_content = 'WARNING! This file contains only NaN values.' if self.peak_line == -1 \
             else f'The peak is in correspondence of curve {self.peak_line}.'
 
-        # CURRENTLY USED FOR MOUSE X Y POSITION
-        #self.info_label.setText(label_content)
+        self.info_label.setText(label_content)
 
     def create_scrollarea(self):
         """Create the scrollArea with the checkboxes to control the lines to plot, and check the line with the peak."""
@@ -135,8 +129,6 @@ class GraphWindow(QtWidgets.QMainWindow):
                                                          clickable=True,
                                                          name=str(line_number))
         self.lines[line_number].sigClicked.connect(self.line_click)
-
-
 
     def remove_curve(self, line_number):
         """Delete the plot of one line of a byte."""
