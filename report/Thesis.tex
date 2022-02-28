@@ -91,20 +91,21 @@
 
 % Insert here the info that will be displayed into your Title page 
 % -> title of your work
-\renewcommand{\title}{Title}
+\renewcommand{\title}{CPA/Template attacks output viewer}
 % -> author name and surname
-\renewcommand{\author}{Name Surname}
+\newcommand{\AUTHORa}{Leonardo Gargani}
+\newcommand{\AUTHORb}{Olivier Wartique}
 % -> MSc course
-\newcommand{\course}{Xxxxxxxxxxxx Engineering - Ingegneria Xxxxxxxxxxxx}
+\newcommand{\course}{Computer Science and Engineering}
 % -> advisor name and surname
-\newcommand{\advisor}{Prof. Name Surname}
+\newcommand{\supervisor}{Giuseppe Massari}
 % IF AND ONLY IF you need to modify the co-supervisors you also have to modify the file config_files/title_page.tex (ONLY where it is marked)
-\newcommand{\firstcoadvisor}{Name Surname} % insert if any otherwise comment
-\newcommand{\secondcoadvisor}{Name Surname} % insert if any otherwise comment
+\newcommand{\cosupervisor}{Michele Piccoli} % insert if any otherwise comment
 % -> author ID
-\newcommand{\ID}{Student ID}
+\newcommand{\IDa}{10569221}
+\newcommand{\IDb}{???}
 % -> academic year
-\newcommand{\YEAR}{20XX-20XX}
+\newcommand{\YEAR}{2021-2022}
 % -> abstract (only in English)
 \renewcommand{\abstract}{Here goes the Abstract in English of your thesis (in article format)
 followed by a list of keywords.
@@ -183,51 +184,6 @@ It is recommended to give a label to each section by using the command
 \end{verbatim}
 where the argument is just a text string that you'll use to reference that part
 as follows: \textit{Section~\ref{sec:introduction} contains \sc{INTRODUCTION}  \dots}.
-
-%-----------------------------------------------------------------------------
-% EQUATIONS
-%-----------------------------------------------------------------------------
-\section{Equations}
-\label{sec:eqs}
-This section gives some examples of writing mathematical equations in your thesis.
-
-Maxwell's equations read:
-\begin{subequations}
-    \label{eq:maxwell}
-    \begin{align}[left=\empheqlbrace]
-    \nabla\cdot \bm{D} & = \rho, \label{eq:maxwell1} \\
-    \nabla \times \bm{E} +  \frac{\partial \bm{B}}{\partial t} & = \bm{0}, \label{eq:maxwell2} \\
-    \nabla\cdot \bm{B} & = 0, \label{eq:maxwell3} \\
-    \nabla \times \bm{H} - \frac{\partial \bm{D}}{\partial t} &= \bm{J}. \label{eq:maxwell4}
-    \end{align}
-\end{subequations}
-
-Equation~\eqref{eq:maxwell} is automatically labeled by \texttt{cleveref},
-as well as Equation~\eqref{eq:maxwell1} and Equation~\eqref{eq:maxwell3}.
-Thanks to the \verb|cleveref| package, there is no need to use \verb|\eqref|.
-Equations have to be numbered only if they are referenced in the text.
-
-Equations~\eqref{eq:maxwell_multilabels1}, \eqref{eq:maxwell_multilabels2}, \eqref{eq:maxwell_multilabels3}, and \eqref{eq:maxwell_multilabels4} show again Maxwell's equations without brace:
-\begin{align}
-    \nabla\cdot \bm{D} & = \rho, \label{eq:maxwell_multilabels1} \\
-    \nabla \times \bm{E} +  \frac{\partial \bm{B}}{\partial t} &= \bm{0}, \label{eq:maxwell_multilabels2} \\
-    \nabla\cdot \bm{B} & = 0, \label{eq:maxwell_multilabels3} \\
-    \nabla \times \bm{H} - \frac{\partial \bm{D}}{\partial t} &= \bm{J} \label{eq:maxwell_multilabels4}.
-\end{align}
-
-Equation~\eqref{eq:maxwell_singlelabel} is the same as before,
-but with just one label:
-\begin{equation}
-    \label{eq:maxwell_singlelabel}
-    \left\{
-    \begin{aligned}
-    \nabla\cdot \bm{D} & = \rho, \\
-    \nabla \times \bm{E} +  \frac{\partial \bm{B}}{\partial t} &= \bm{0},\\
-    \nabla\cdot \bm{B} & = 0, \\
-    \nabla \times \bm{H} - \frac{\partial \bm{D}}{\partial t} &= \bm{J}.
-    \end{aligned}
-    \right.
-\end{equation}
 
 %-----------------------------------------------------------------------------
 % FIGURES, TABLES AND ALGORITHMS
@@ -313,31 +269,6 @@ Moreover, with the use of \texttt{table*} and the option \texttt{bp} it is possi
     \label{table:exampleC}
 \end{table*}
 
-\subsection{Algorithms}
-\label{subsec:algorithms}
-
-Pseudo-algorithms can be written in \LaTeX{} with the \texttt{algorithm} and \texttt{algorithmic} packages.
-An example is shown in Algorithm~\ref{alg:var}.
-\begin{algorithm}[H]
-\label{alg:example}
-\caption{Name of the Algorithm}
-\label{alg:var}
-\label{protocol1}
-\begin{algorithmic}[1]
-\STATE Initial instructions
-\FOR{$for-condition$}
-\STATE{Some instructions}
-\IF{$if-condition$}
-\STATE{Some other instructions}
-\ENDIF
-\ENDFOR
-\WHILE{$while-condition$}
-\STATE{Some further instructions}
-\ENDWHILE
-\STATE Final instructions
-\end{algorithmic}
-\end{algorithm} 
-
 \section{Some further useful suggestions}
 
 Theorems have to be formatted as follows:
@@ -365,25 +296,6 @@ How to write numbered lists:
     \item second item.
 \end{enumerate}
 
-\section{Use of copyrighted material}
-
-Each student is responsible for obtaining copyright permissions, if necessary, to include published material in the thesis.
-This applies typically to third-party material published by someone else.
-
-\section{Plagiarism}
-
-You have to be sure to respect the rules on Copyright and avoid an involuntary plagiarism.
-It is allowed to take other persons' ideas only if the author and his original work are clearly mentioned.
-As stated in the Code of Ethics and Conduct, Politecnico di Milano \textit{promotes the integrity of research,
-condemns manipulation and the infringement of intellectual property}, and gives opportunity to all those
-who carry out research activities to have an adequate training on ethical conduct and integrity while doing research.
-To be sure to respect the copyright rules, read the guides on Copyright legislation and citation styles available
-at:
-\begin{verbatim}
-https://www.biblio.polimi.it/en/tools/courses-and-tutorials
-\end{verbatim}
-You can also attend the courses which are periodically organized on "Bibliographic citations and bibliography management".
-
 %-----------------------------------------------------------------------------
 % CONCLUSION
 %-----------------------------------------------------------------------------
@@ -392,20 +304,9 @@ You can also attend the courses which are periodically organized on "Bibliograph
 A final section containing the main conclusions of your research/study
 and possible future developments of your work have to be inserted in the section ``Conclusions''.
 
-\section{Bibliography and citations}
-Your thesis must contain a suitable Bibliography which lists all the sources consulted on developing the work.
-The list of references is placed at the end of the manuscript after the chapter containing the conclusions.
-It is suggested to use the BibTeX package and save the bibliographic references in the file \verb|bibliography.bib|.
-This is indeed a database containing all the information about the references. To cite in your manuscript, use the \verb|\cite{}| command as follows:
-\\
-\textit{Here is how you cite bibliography entries: \cite{knuth74}, or multiple ones at once: \cite{knuth92,lamport94}}.
-\\
-The bibliography and list of references are generated automatically by running BibTeX \cite{bibtex}.
-
-%-----------------------------------------------------------------------------
-% BIBLIOGRAPHY
-%-----------------------------------------------------------------------------
-\bibliography{bibliography.bib}
+\section{Future work}
+\color{black}
+New section ...
 
 \appendix
 \section{Appendix A}
@@ -415,27 +316,6 @@ which supplement the main results contained in the previous sections.
 
 \section{Appendix B}
 It may be necessary to include another appendix to better organize the presentation of supplementary material.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%     ABSTRACT IN ITALIAN LANGUAGE AND ACKNOWLEDGMENTS     %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\cleardoublepage
-
-%-----------------------------------------------------------------------------
-% SOMMARIO
-%-----------------------------------------------------------------------------
-\section*{Abstract in lingua italiana}
-Qui va l'Abstract in lingua italiana della tesi seguito dalla lista di parole chiave.
-\vspace{15pt}
-\begin{tcolorbox}[arc=0pt, boxrule=0pt, colback=bluePoli!60, width=\textwidth, colupper=white]
-    \textbf{Parole chiave:} qui, le parole chiave, della tesi, in italiano 
-\end{tcolorbox}
-
-%-----------------------------------------------------------------------------
-% ACKNOWLEDGEMENTS
-%-----------------------------------------------------------------------------
-\section*{Acknowledgements}
-Here you might want to acknowledge someone.
 
 %-------------------------------------------------------------------------
 %	END OF YOUR DOCUMENT
