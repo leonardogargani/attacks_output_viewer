@@ -47,13 +47,15 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.peak_y = None
 
     def mouse_moved(self, event):
+        """Update label on the GUI with the position of the mouse hovering the plot."""
         mouse_point = self.graph_widget.mapToView(event)
         self.vLine.setPos(mouse_point.x())
         self.hLine.setPos(mouse_point.y())
         self.mouse_position_label.setText(f'x={int(mouse_point.x())}, y={mouse_point.y():.3f}')
 
     def msg_callback(self, x, y, line):
-        print(f"Custom signal received with values x = {x}, y = {y} and line number {line}")
+        """Function used to test the emission of the signal when clicking on a plot."""
+        print(f"Custom signal received with values x={x}, y={y} and line={line}")
 
     def line_click(self, item, points):
         """Print the coordinates of the point on the plot which is clicked by the user."""
@@ -153,11 +155,8 @@ class GraphWindow(QtWidgets.QMainWindow):
             self.arrow = pg.ArrowItem(pos=(self.peak_x, self.peak_y), angle=0)
             self.graph_widget.addItem(self.arrow)
 
-
     def remove_curve(self, line_number):
         """Delete the plot of one line of a byte."""
         self.lines[line_number].clear()
         # Plot a "dumb" point so that the widget is refreshed and the removed curve is disappeared
         self.graph_widget.plot([0], [0])
-
-
