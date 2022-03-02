@@ -17,6 +17,7 @@ class MainWindow(QtWidgets.QMainWindow):
     """Window containing all the buttons to plot each one of the bytes."""
 
     def __init__(self, *args, **kwargs):
+        """Class constructor."""
         super(MainWindow, self).__init__(*args, **kwargs)
         self.graph_windows = []
         uic.loadUi(MAIN_WINDOW_UI, self)

@@ -18,7 +18,6 @@ PEAKS_CSV = '../data/output/csv/peaks.csv'
 
 class GraphWindow(QtWidgets.QMainWindow):
     """Window containing a plot of a byte and a selector for the lines to plot."""
-
     # Create a custom signal with corresponding arguments
     message = pyqtSignal(int, float, str)
 
@@ -41,8 +40,8 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.graph_widget.scene().sigMouseMoved.connect(self.mouse_moved)
 
         # Peak position
-        self.text = None
-        self.arrow = None
+        self.plot_label = None
+        self.plot_arrow = None
         self.peak_x = None
         self.peak_y = None
 
@@ -79,7 +78,8 @@ class GraphWindow(QtWidgets.QMainWindow):
 
         # Enable downsampling with:
         # - auto=True (automatically pick reduction factor for the visible samples based on visible range)
-        # - mode='subsample' (fastest but least accurate method)
+        # - mode='subsample' (slowest but most accurate method, necessary in our case since we don't want
+        #                       to lose our peak value due to subsample)
         self.graph_widget.setDownsampling(auto=True, mode='peak')
 
         try:
@@ -125,10 +125,9 @@ class GraphWindow(QtWidgets.QMainWindow):
 
     def clear_checks(self):
         """Clear all the checks from the checkboxes in the scrollArea."""
-
         # Remove peak value arrow and text
-        self.graph_widget.removeItem(self.arrow)
-        self.graph_widget.removeItem(self.text)
+        self.graph_widget.removeItem(self.plot_arrow)
+        self.graph_widget.removeItem(self.plot_label)
 
         for i in range(self.correlation_values.shape[1]):
             checkbox = self.vbox.itemAt(i).widget()
@@ -146,17 +145,17 @@ class GraphWindow(QtWidgets.QMainWindow):
 
         # Add peak value arrow and text if it is the corresponding line
         if line_number == self.peak_line:
-            self.text = pg.TextItem(
+            self.plot_label = pg.TextItem(
                 html='<div style="text-align: center"><span style="color: #FFF;">Peak value',
                 anchor=(-0.3, 0.5), angle=0, border='w', fill=(0, 0, 255, 100))
-            self.graph_widget.addItem(self.text)
-            self.text.setPos(self.peak_x, self.peak_y)
+            self.graph_widget.addItem(self.plot_label)
+            self.plot_label.setPos(self.peak_x, self.peak_y)
 
-            self.arrow = pg.ArrowItem(pos=(self.peak_x, self.peak_y), angle=0)
-            self.graph_widget.addItem(self.arrow)
+            self.plot_arrow = pg.ArrowItem(pos=(self.peak_x, self.peak_y), angle=0)
+            self.graph_widget.addItem(self.plot_arrow)
 
     def remove_curve(self, line_number):
         """Delete the plot of one line of a byte."""
         self.lines[line_number].clear()
-        # Plot a "dumb" point so that the widget is refreshed and the removed curve is disappeared
+        # Plot a "dumb" point so that the widget is refreshed and the removed curve disappears
         self.graph_widget.plot([0], [0])
