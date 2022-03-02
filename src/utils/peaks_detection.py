@@ -53,7 +53,7 @@ try:
         print('Saving plot...')
         fig = plt.figure(figsize=(12, 4))
         plt.plot(correlation_values)
-        plt.ylim([-1, 1.3])
+        plt.ylim([-1.3*np.abs(y_peak), 1.3*np.abs(y_peak)])
         ax = plt.gca()
         text = f'Line {peak_line}, x={x_peak}, y={y_peak:.3f}'
         bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
