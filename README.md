@@ -19,14 +19,19 @@ First, place the CSV files inside the `data/input/csv/` directory.
 
 Then, as a preprocessing step, run the two initial scripts as specified right below (respect the execution order).
 
-1. Convert the `.csv` files into `.npy` files:
+1. Go into the `src/utils/` directory:
+   ```bash
+   cd src/utils/
+   ```
+
+3. Convert the `.csv` files into `.npy` files:
     ```bash
     python utils/csv_to_npy_conversion.py
     ```
    If the script has been successfully executed, then you should find all your new `.npy` files inside
    the `data/output/npy/` directory.
 
-2. Detect the peak of each file, store the result, and generate some images of those bytes:
+4. Detect the peak of each file, store the result, and generate some images of those bytes:
     ```bash
     python utils/peak_detection.py
     ```
@@ -35,6 +40,7 @@ Then, as a preprocessing step, run the two initial scripts as specified right be
 
 Finally, execute the program:
 ```bash
+cd ..
 python main.py
 ```
 

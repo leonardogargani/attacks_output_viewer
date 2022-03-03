@@ -1,7 +1,7 @@
 """Script to detect the peak of each plot
 
-Script that plots each byte and saves it so that the user can statically open it.
-It also detects the peaks saving the results in a .csv file.
+Script that detects the peaks saving the results in a .csv file.
+If the corresponding flag is enabled, it also plots each byte saving a png so that the user can statically open it.
 """
 
 import numpy as np
@@ -14,18 +14,19 @@ NPY_DIRECTORY = "../../data/output/npy/"
 PNG_DIRECTORY = "../../data/output/png/"
 CSV_DIRECTORY = "../../data/output/csv/"
 
+# Set to False for reducing time execution by not generating png images, True for generating those images instead
+SAVE_PNG_PLOTS = False
 
-# Use the Agg non-interactive backend, to save the plots
-matplotlib.use('agg')
 
 x_peaks_values = np.empty((16,), dtype=int)
 y_peaks_values = np.empty((16,), dtype=np.float64)
 peaks_lines = np.empty((16,), dtype=int)
 
-os.makedirs(f'{PNG_DIRECTORY}', exist_ok=True)
 os.makedirs(f'{CSV_DIRECTORY}', exist_ok=True)
 
+
 try:
+
     for byte_number in range(16):
         correlation_values = np.load(f'{NPY_DIRECTORY}{str(byte_number).zfill(2)}.npy', mmap_mode='r+')
         print(f'-------------- Byte #{byte_number} --------------')
@@ -41,7 +42,7 @@ try:
         # Replace NaN values with 0
         correlation_values[np.isnan(correlation_values)] = 0
 
-        y_peak = np.nanmax(correlation_values)
+        y_peak = max(correlation_values.min(initial=0), correlation_values.max(initial=0), key=abs)
         x_peak_array, peak_line_array = np.where(correlation_values == y_peak)
         x_peak = x_peak_array[0]
         peak_line = peak_line_array[0]
@@ -49,24 +50,37 @@ try:
         print(f'Peak value    = {y_peak}')
         print(f'Sample number = {x_peak}')
 
-        # Plot the byte and highlight the peak
-        print('Saving plot...')
-        fig = plt.figure(figsize=(12, 4))
-        plt.plot(correlation_values)
-        plt.ylim([-1.3*np.abs(y_peak), 1.3*np.abs(y_peak)])
-        ax = plt.gca()
-        text = f'Line {peak_line}, x={x_peak}, y={y_peak:.3f}'
-        bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-        arrowprops = dict(arrowstyle="->", connectionstyle="angle,angleA=0,angleB=60")
-        kw = dict(xycoords='data', textcoords="axes fraction",
-                  arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
-        ax.annotate(text, xy=(x_peak, y_peak), xytext=(0.94, 0.96), **kw)
-        plt.title(f'Byte #{str(byte_number).zfill(2)}')
-        plt.savefig(f'{str(PNG_DIRECTORY + str(byte_number).zfill(2))}_peak.png')
+        if SAVE_PNG_PLOTS:
+            os.makedirs(f'{PNG_DIRECTORY}', exist_ok=True)
+            # Use the Agg non-interactive backend to save the plots
+            matplotlib.use('agg')
+            # Automatically set simplification and chunking parameters to reasonable settings to speed up plotting
+            matplotlib.style.use('fast')
+            # Simplify paths by removing "invisible" points to reduce file size and increase rendering speed
+            matplotlib.rcParams['path.simplify'] = True
+            # Set threshold of similarity below which vertices will be removed in the simplification process
+            matplotlib.rcParams['path.simplify_threshold'] = 1.0
 
-        plt.close(fig)
-        del fig, ax
-        gc.collect()
+            bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+            arrowprops = dict(arrowstyle="->", connectionstyle="angle,angleA=0,angleB=60")
+            kw = dict(xycoords='data', textcoords="axes fraction",
+                      arrowprops=arrowprops, bbox=bbox_props, ha="right", va="top")
+
+            # Plot the byte and highlight the peak
+            print('Saving plot...')
+            fig = plt.figure(figsize=(12, 4))
+            plt.ylim(-1.1*float(abs(y_peak)), 1.3*float(abs(y_peak)))
+            plt.plot(correlation_values)
+
+            ax = plt.gca()
+            text = f'Line {peak_line}, x={x_peak}, y={y_peak:.3f}'
+            ax.annotate(text, xy=(x_peak, y_peak), xytext=(0.94, 0.96), **kw)
+            plt.title(f'Byte #{str(byte_number).zfill(2)}')
+            plt.savefig(f'{str(PNG_DIRECTORY + str(byte_number).zfill(2))}_peak.png')
+
+            plt.close(fig)
+            del fig, ax
+            gc.collect()
 
         # Save results
         x_peaks_values[byte_number] = x_peak
@@ -82,6 +96,5 @@ try:
 
 except FileNotFoundError:
     print('[ERROR] No .npy file found. Run "csv_to_npy_conversion.py" script before.')
-    os.rmdir(PNG_DIRECTORY)
     os.rmdir(CSV_DIRECTORY)
     exit()

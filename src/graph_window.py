@@ -133,6 +133,7 @@ class GraphWindow(QtWidgets.QMainWindow):
             checkbox = self.vbox.itemAt(i).widget()
             if checkbox.isChecked:
                 checkbox.setChecked(False)
+        self.graph_widget.clear()
 
     def add_curve(self, line_number):
         """Plot one of the lines of a byte."""
