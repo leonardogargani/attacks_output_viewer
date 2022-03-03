@@ -1,0 +1,272 @@
+\documentclass[11pt,a4paper]{article} 
+
+%------------------------------------------------------------------------------
+%	REQUIRED PACKAGES AND  CONFIGURATIONS
+%------------------------------------------------------------------------------
+% PACKAGES FOR TITLES
+\usepackage{titlesec}
+\usepackage{color}
+
+% PACKAGES FOR LANGUAGE AND FONT
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc} % Font encoding
+
+% PACKAGES FOR IMAGES
+\usepackage{graphicx}
+\graphicspath{{img/}}
+\usepackage{eso-pic} % For the background picture on the title page
+\usepackage{subfig} % Numbered and caption subfigures using \subfloat
+\usepackage{caption} % Coloured captions
+\usepackage{transparent}
+
+% STANDARD MATH PACKAGES
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage[overload]{empheq}  % For braced-style systems of equations
+
+% PACKAGES FOR TABLES
+\usepackage{tabularx}
+\usepackage{longtable} % tables that can span several pages
+\usepackage{colortbl}
+
+% PACKAGES FOR ALGORITHMS (PSEUDO-CODE)
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% PACKAGES FOR REFERENCES & BIBLIOGRAPHY
+\usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,filecolor=black,menucolor=black,runcolor=black,urlcolor=black]{hyperref} % Adds clickable links at references
+\usepackage{cleveref}
+\usepackage[square, numbers, sort&compress]{natbib} % Square brackets, citing references with numbers, citations sorted by appearance in the text and compressed
+\bibliographystyle{plain} % You may use a different style adapted to your field
+
+% PACKAGES FOR THE APPENDIX
+\usepackage{appendix}
+
+% PACKAGES FOR ITEMIZE & ENUMERATES 
+\usepackage{enumitem}
+
+% OTHER PACKAGES
+\usepackage{amsthm,thmtools,xcolor} % Coloured "Theorem"
+\usepackage{comment} % Comment part of code
+\usepackage{fancyhdr} % Fancy headers and footers
+\usepackage{lipsum} % Insert dummy text
+\usepackage{tcolorbox} % Create coloured boxes (e.g. the one for the key-words)
+
+%-------------------------------------------------------------------------
+%	NEW COMMANDS DEFINED
+%-------------------------------------------------------------------------
+\newcommand{\bea}{\begin{eqnarray}} % Shortcut for equation arrays
+\newcommand{\eea}{\end{eqnarray}}
+\newcommand{\e}[1]{\times 10^{#1}}  % Powers of 10 notation
+\newcommand{\mathbbm}[1]{\text{\usefont{U}{bbm}{m}{n}#1}} % From mathbbm.sty
+\newcommand{\pdev}[2]{\frac{\partial#1}{\partial#2}}
+
+%----------------------------------------------------------------------------
+%	ADD YOUR DEFINITIONS AND COMMANDS (be careful of existing commands)
+%----------------------------------------------------------------------------
+
+\input{config_files/config}
+
+% -> title of your work
+\renewcommand{\title}{CPA/Template attacks output viewer}
+% -> author name and surname
+\newcommand{\AUTHORa}{Leonardo Gargani}
+\newcommand{\AUTHORb}{Olivier Wartique}
+% -> MSc course
+\newcommand{\course}{Computer Science and Engineering}
+% -> supervisor name and surname
+\newcommand{\supervisor}{Giuseppe Massari}
+% IF AND ONLY IF you need to modify the co-supervisors you also have to modify the file config_files/title_page.tex (ONLY where it is marked)
+\newcommand{\cosupervisor}{Michele Piccoli} % insert if any otherwise comment
+% -> author ID
+\newcommand{\IDa}{10569221}
+\newcommand{\IDb}{10844629}
+% -> academic year
+\newcommand{\YEAR}{2021-2022}
+% -> abstract (only in English)
+\renewcommand{\abstract}{The Abstract is a concise summary of the content of the thesis (single page of text) and a guide to the most important contributions included in your thesis.
+The Abstract is the very last thing you write.
+It should be a self-contained text and should be clear to someone who hasn't (yet) read the whole manuscript.
+The Abstract should contain the answers to the main research questions that have been addressed in your thesis.
+It needs to summarize the motivations and the adopted approach as well as the findings of your work and their relevance and impact.}
+
+%-------------------------------------------------------------------------
+%	BEGIN OF YOUR DOCUMENT
+%-------------------------------------------------------------------------
+\begin{document}
+
+%-----------------------------------------------------------------------------
+% TITLE PAGE
+%-----------------------------------------------------------------------------
+% This file creates the Title Page of the document
+\input{config_files/title_page}
+
+%-----------------------------------------------------------------------------
+% INTRODUCTION
+%-----------------------------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+...
+
+%-----------------------------------------------------------------------------
+% IMPLEMENTATION
+%-----------------------------------------------------------------------------
+\section{Implementation}
+\label{sec:implementation}
+...
+
+%-----------------------------------------------------------------------------
+% ENCOUNTERED PROBLEMS AND SOLUTIONS
+%-----------------------------------------------------------------------------
+\section{Faced problems and solutions}
+\label{sec:faced-problems-and-solutions}
+
+During the development of the application, we had to face up some problems, mainly due to the size of the dataset to handle.
+We think it can be useful to share here some insights about our decision-making process as the developement was moving forward, and the solutions we came up with.\\
+
+Starting from the very beginning, our goal is plotting the content of a .csv file, while maintaing the possibility of moving around inside the plot (i.e., zoom-in, zoom-out, change the X-range).\\
+
+Our initial approach was plotting all the file at once.
+
+The problem that immediately arised was that handling over 7.5 million points (every .csv file has about 30 thousand rows and 256 columns) was definitely too resource-demanding. That led to an evidently unusable GUI due to its poor performance, not only when moving around, but also for the loading time of the plot itself.\\
+
+Therefore, we started experimenting looking for some possible improvements to load data into memory in an efficient way using Python.\\
+
+A first available option we found was converting the .csv file into a .hdf5 one. HDF5 is a file format built for fast I/O processing and storage, whose potential can be fully exploited through a handy Python library.
+
+However, the result we obtained was still very poor and the HDF5 option had to be discarded.\\
+
+Since we handled all the data as numpy arrays, we also came across the .npy file format. It is a simple format for saving numpy arrays, in an optimized way, with no loss of information.
+After converting the .csv file into a .npy one, we plotted it in the same way as before. The loading time was significantly lower and the usability of the GUI improved, but still far from an acceptable result.\\
+
+Having understood that .npy was a far better choice over .csv and .hdf5, we decided to keep that conversion step and start tweaking around to gain as much performance as possible, this time in the PyQtGraph plotting process.
+
+A special tweak worth mentioning is the way we subsample data in order to be displayed in the plot.
+PyQtGraph provides three downsampling modes: subsample, mean, and peak.
+
+Despite being the slowest one, we picked the last one ("peak") since it downsamples by drawing a saw wave that follows the min and max of the original data. This is the only way to make sure that the peak of our plot does not get lost while displaying the points.\\
+
+Back to the fact that the GUI responsiveness was far from being acceptable, we came to the conclusion that showing all the 7.5 M points at the same time was not feasible in any way.
+
+At this point we tried to change our approach. Here was (and currently is) our new one.
+
+Since every file contains 256 rows, and each row corresponds to a curve in the plot, we can preprocess every file and identify for it which is the peak and what row it shows up in. Then, save the results in a new file.
+When the user opens a plot, now the program reads the content of such a file to display by default only the curve with the peak. In addition, each one of the other curves can be shown/hidden in the plot by using a dedicated checkbox.\\
+
+This new approach leads to a very low loading time and to a GUI which is not only usable, but which has high performance in every zoom/scroll operation.\\
+
+Despite the high performance increase intrinsic to the new way of displaying data, we still decided to keep the conversion step from .csv to .npy.
+In fact, the same file stored as .npy takes more than 40\% less space on disk than if stored as .csv.
+As we will cover in more detail in the next section, this leads to both faster loading times and lower memory usage at runtime.
+
+%-----------------------------------------------------------------------------
+% EXPERIMENTAL RESULTS
+%-----------------------------------------------------------------------------
+\section{Experimental results}
+\label{sec:experimental-results}
+
+...
+
+%-----------------------------------------------------------------------------
+% CONCLUSIONS
+%-----------------------------------------------------------------------------
+\section{Conclusions}
+\label{sec:conclusions}
+
+...
+
+%-----------------------------------------------------------------------------
+% GUIDE (TO BE REMOVED)
+%-----------------------------------------------------------------------------
+\section{Guide (to be removed)}
+
+Figures, Tables and Algorithms have to contain a Caption that describes their content, and have to be properly referred in the text.
+
+\subsection{Figures}
+\label{subsec:figures}
+
+Include figures (\verb|.png|, \verb|.jpg|, \verb|.eps|) with the following command:
+\begin{verbatim}
+\includegraphics[options]{filename.xxx}
+\end{verbatim}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\textwidth]{logo_polimi_scritta.eps}
+    \caption{Caption of the Figure.}
+    \label{fig:quadtree}
+\end{figure}
+
+Thanks to the \texttt{\textbackslash subfloat} command, a single figure, such as Figure~\ref{fig:quadtree},
+can contain multiple sub-figures with their own caption and label, e.g. Figure~\ref{fig:polimi_logo1} and Figure~\ref{fig:polimi_logo2}. 
+
+\begin{figure}[H]
+    \centering
+    \subfloat[One PoliMi logo.\label{fig:polimi_logo1}]{
+        \includegraphics[scale=0.5]{img/logo_polimi_scritta.eps}
+    }
+    \quad
+    \subfloat[Another one PoliMi logo.\label{fig:polimi_logo2}]{
+        \includegraphics[scale=0.5]{img/logo_polimi_scritta2.eps}
+    }
+    \caption[]{Caption of the Figure.}
+    \label{fig:quadtree2}
+\end{figure}
+
+\subsection{Tables}
+\label{subsec:tables}
+
+\begin{table}[H]
+    \caption*{\textbf{Example of Table (optional)}}
+    \centering 
+    \begin{tabular}{|p{3em} c c c |}
+    \hline
+    \rowcolor{bluePoli!40}
+     & \textbf{column1} & \textbf{column2} & \textbf{column3} \T\B \\
+    \hline \hline
+    \textbf{row1} & 1 & 2 & 3 \T\B \\
+    \textbf{row2} & $\alpha$ & $\beta$ & $\gamma$ \T\B\\
+    \textbf{row3} & alpha & beta & gamma \B\\
+    \hline
+    \end{tabular}
+    \\[10pt]
+    \caption{Caption of the Table.}
+    \label{table:example}
+\end{table}
+
+\begin{table*}[bp]
+\centering 
+    \begin{tabular}{|p{3em} | c | c | c | c | c | c|}
+    \hline
+    \rowcolor{bluePoli!40}
+     & \textbf{column1} & \textbf{column2} & \textbf{column3} & \textbf{column4} & \textbf{column5} & \textbf{column6} \T\B \\
+    \hline \hline
+    \textbf{row1} & 1 & 2 & 3 & 4 & 5 & 6 \T\B\\
+    \textbf{row2} & a & b & c & d & e & f \T\B\\
+    \textbf{row3} & $\alpha$ & $\beta$ & $\gamma$ & $\delta$ & $\phi$ & $\omega$ \T\B\\
+    \textbf{row4} & alpha & beta & gamma & delta & phi & omega \B\\
+    \hline
+    \end{tabular}
+    \\[10pt]
+    \caption{Highlighting the columns}
+    \label{table:exampleC}
+\end{table*}
+
+How to insert itemized lists:
+\begin{itemize}
+    \item first item;
+    \item second item.
+\end{itemize}
+
+How to write numbered lists:
+\begin{enumerate}
+    \item first item;
+    \item second item.
+\end{enumerate}
+
+%-------------------------------------------------------------------------
+%	END OF YOUR DOCUMENT
+%-------------------------------------------------------------------------
+\end{document}
