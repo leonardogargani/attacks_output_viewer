@@ -26,14 +26,14 @@ Then, as a preprocessing step, run the two initial scripts as specified right be
 
 3. Convert the `.csv` files into `.npy` files:
     ```bash
-    python utils/csv_to_npy_conversion.py
+    python csv_to_npy_conversion.py
     ```
    If the script has been successfully executed, then you should find all your new `.npy` files inside
    the `data/output/npy/` directory.
 
 4. Detect the peak of each file, store the result, and generate some images of those bytes:
     ```bash
-    python utils/peak_detection.py
+    python peak_detection.py
     ```
    If the script has been successfully executed, then you should find all the `.png` files inside
    the `data/output/png/` directory and the `peaks.csv` file inside the `data/output/csv/` directory.
@@ -121,8 +121,11 @@ After running the two initial scripts, the structure of the codebase will be the
 |   |   |   |-- config.tex
 |   |   |   `-- title_page.tex
 |   |   |-- img
-|   |   |   |-- ...
-|   |   |   `-- ...
+|   |   |   |-- logo_polimi_ing_indinf.eps
+|   |   |   |-- main_window.png
+|   |   |   |-- multiple_curves.png
+|   |   |   |-- raggiera_polimi.eps
+|   |   |   `-- single_curve.png
 |   |   |-- report.pdf
 |   |   `-- report.tex
 |   |-- src
@@ -136,8 +139,4 @@ After running the two initial scripts, the structure of the codebase will be the
 |   |       |-- csv_to_npy_conversion.py
 |   |       `-- peaks_detection.py
 ```
-
-
-TODOs:
-- when created, add the images to the codebase structure (inside the report subdirectory)
 
