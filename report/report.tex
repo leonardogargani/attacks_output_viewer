@@ -86,11 +86,7 @@
 % -> academic year
 \newcommand{\YEAR}{2021-2022}
 % -> abstract (only in English)
-\renewcommand{\abstract}{The Abstract is a concise summary of the content of the thesis (single page of text) and a guide to the most important contributions included in your thesis.
-The Abstract is the very last thing you write.
-It should be a self-contained text and should be clear to someone who hasn't (yet) read the whole manuscript.
-The Abstract should contain the answers to the main research questions that have been addressed in your thesis.
-It needs to summarize the motivations and the adopted approach as well as the findings of your work and their relevance and impact.}
+\renewcommand{\abstract}{This report summarizes the implementation of a GUI tool developed in Python to visualize the large amount of data generated after a CPA/template attack. Our application tries to propose a solution for the poor performance of conventional plotting tools when handling large amount of data. The adopted solution was to take advantage of the fact that data is static. Therefore processing the data beforehand allow the reach better performance and user experience.}
 
 %-------------------------------------------------------------------------
 %	BEGIN OF YOUR DOCUMENT
@@ -108,7 +104,10 @@ It needs to summarize the motivations and the adopted approach as well as the fi
 %-----------------------------------------------------------------------------
 \section{Introduction}
 \label{sec:introduction}
-...
+This report summarizes the project carried out for the Embedded Systems class. The brief was to create a GUI application in order to visualize the large amount of data generated after an attempt of CPA/template attack. Conventional tools for plotting are performing poorly when handling such an amount of data (around 10 millions sample points per plot). From this fact we focused our efforts to create a user friendly GUI that is capable zooming and scrolling efficiently while handling a lot of data points.\\
+
+This report is divided in three sections. First, the implementation is discussed: what libraries are used, what kind of input files are required, the pre-processing steps and finally the features implemented. Then, a section is dedicated to the issues encountered during the creation of the application and how they are solved. Finally the last section is summarizing results about time performance and memory consumption. The conclusion will also give the reader possible future work and improvements.
+
 
 %-----------------------------------------------------------------------------
 % IMPLEMENTATION
