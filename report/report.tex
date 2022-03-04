@@ -32,8 +32,8 @@
 \usepackage{colortbl}
 
 % PACKAGES FOR ALGORITHMS (PSEUDO-CODE)
-%\usepackage{algorithm}
-%\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{algorithmic}
 
 % PACKAGES FOR REFERENCES & BIBLIOGRAPHY
 \usepackage[colorlinks=true,linkcolor=black,anchorcolor=black,citecolor=black,filecolor=black,menucolor=black,runcolor=black,urlcolor=black]{hyperref} % Adds clickable links at references
@@ -151,29 +151,35 @@ Some safety measures are implemented in order to guarantee the right course of a
 \label{sec:faced-problems-and-solutions}
 
 During the development of the application, we had to face up some problems, mainly due to the size of the dataset to handle.
-We think it can be useful to share here some insights about our decision-making process as the developement was moving forward, and the solutions we came up with.\\
+We think it can be useful to share here some insights about our decision-making process as the developement was moving forward, and the solutions we came up with.
 
-Starting from the very beginning, our goal is plotting the content of a .csv file, while maintaing the possibility of moving around inside the plot (i.e., zoom-in, zoom-out, change the X-range).\\
+\subsection{The starting point}
 
-Our initial approach was plotting all the file at once.
+Starting from the very beginning, our goal is plotting the content of a \texttt{.csv} file, while maintaing the possibility of moving around inside the plot (i.e., zoom-in, zoom-out, change the X-range).\\
 
-The problem that immediately arised was that handling over 7.5 million points (every .csv file has about 30 thousand rows and 256 columns) was definitely too resource-demanding. That led to an evidently unusable GUI due to its poor performance, not only when moving around, but also for the loading time of the plot itself.\\
+Our initial approach was plotting all the file at once. The problem that immediately arised was that handling over 7.5 million points (every \texttt{.csv} file has about 35 thousand rows and 256 columns) was definitely too resource-demanding. That led to an evidently unusable GUI due to its poor performance, not only when moving around, but also for the loading time of the plot itself.\\
 
 Therefore, we started experimenting looking for some possible improvements to load data into memory in an efficient way using Python.\\
 
-A first available option we found was converting the .csv file into a .hdf5 one. HDF5 is a file format built for fast I/O processing and storage, whose potential can be fully exploited through a handy Python library.
+\subsection{Choosing the fastest file format}
 
-However, the result we obtained was still very poor and the HDF5 option had to be discarded.\\
+A first available option we found was converting the \texttt{.csv} file into a \texttt{.hdf5} one. \texttt{HDF5} is a file format built for fast I/O processing and storage, whose potential can be fully exploited through a handy Python library.
 
-Since we handled all the data as numpy arrays, we also came across the .npy file format. It is a simple format for saving numpy arrays, in an optimized way, with no loss of information.
-After converting the .csv file into a .npy one, we plotted it in the same way as before. The loading time was significantly lower and the usability of the GUI improved, but still far from an acceptable result.\\
+However, the result we obtained was still very poor and the \texttt{HDF5} option had to be discarded.\\
 
-Having understood that .npy was a far better choice over .csv and .hdf5, we decided to keep that conversion step and start tweaking around to gain as much performance as possible, this time in the PyQtGraph plotting process.
+Since we handled all the data as \texttt{NumPy} arrays, we also came across the \texttt{.npy} file format. It is a simple format for saving \texttt{NumPy} arrays, in an optimized way, with no loss of information.
+After converting the \texttt{.csv} file into a \texttt{.npy} one, we plotted it in the same way as before. The loading time was significantly lower and the usability of the GUI improved, but still far from an acceptable result.\\
+
+\subsection{Downsampling}
+
+Having understood that \texttt{.npy} was a far better choice over \texttt{.csv} and \texttt{.hdf5}, we decided to keep that conversion step and start tweaking around to gain as much performance as possible, this time in the \texttt{PyQtGraph} plotting process.
 
 A special tweak worth mentioning is the way we subsample data in order to be displayed in the plot.
-PyQtGraph provides three downsampling modes: subsample, mean, and peak.
+\texttt{PyQtGraph} provides three downsampling modes: subsample, mean, and peak.
 
 Despite being the slowest one, we picked the last one ("peak") since it downsamples by drawing a saw wave that follows the min and max of the original data. This is the only way to make sure that the peak of our plot does not get lost while displaying the points.\\
+
+\subsection{Plotting one curve at a time}
 
 Back to the fact that the GUI responsiveness was far from being acceptable, we came to the conclusion that showing all the 7.5 M points at the same time was not feasible in any way.
 
@@ -184,8 +190,8 @@ When the user opens a plot, now the program reads the content of such a file to 
 
 This new approach leads to a very low loading time and to a GUI which is not only usable, but which has high performance in every zoom/scroll operation.\\
 
-Despite the high performance increase intrinsic to the new way of displaying data, we still decided to keep the conversion step from .csv to .npy.
-In fact, the same file stored as .npy takes more than 40\% less space on disk than if stored as .csv.
+Despite the high performance increase intrinsic to the new way of displaying data, we still decided to keep the conversion step from \texttt{.csv} to \texttt{.npy}.
+In fact, the same file stored as \texttt{.npy} takes more than 40\% less space on disk than if stored as \texttt{.csv}.
 As we will cover in more detail in the next section, this leads to both faster loading times and lower memory usage at runtime.
 
 %-----------------------------------------------------------------------------
@@ -194,7 +200,66 @@ As we will cover in more detail in the next section, this leads to both faster l
 \section{Experimental results}
 \label{sec:experimental-results}
 
-...
+Here are some useful measurements about execution time and memory usage of the program.
+
+\subsection{Testing conditions}
+
+All the tests have been performed on a machine with an i7-7500U CPU (dual-core @ 2.70 GHz) and 8 GB of RAM.
+Keep in mind that the execution time will vary from machine to machine.
+
+Since at the moment of writing the hardware above can be considered mid-low end, you can likely expect better results when running the scripts.\\
+
+The 16 \texttt{.csv} input files have each one with 256 columns and about 30k rows.
+
+\subsection{Conversion from .csv to .npy}
+
+The preprocessing step of converting the 16 files to the \texttt{.npy} format is performed by the \texttt{csv\_to\_npy\_converter.py} script.
+
+It runs for 2m00s while using 1.1 GB of memory.
+
+\subsection{Peak detections}
+
+The preprocessing step of detecting the peak value of each one of the files is performed by the \texttt{peak\_detection.py} script.
+
+When the corresponding flag is set, in addition to detecting the peaks it also generates and saves the plots of all the files.
+In such a case the total execution time is 1m55s, with a memory consumption of 550 MB.
+
+However, by default the plots are not generated and this way the execution time is extremely reduced down to just 1s.
+
+\subsection{Main program}
+
+For the main program (\texttt{main.py}), we recorded the change in memory consumption by varying the number of open plots and displayed curves.
+
+In particular, the obtained results in memory consumption are the following:
+\begin{itemize}
+    \item the main window uses 125 MB;
+    \item every other window uses:
+    \begin{itemize}
+    		\item 65 MB for loading the .npy file (which is the size on disk of the file);
+    		\item 5 MB for the creation of the window;
+    		\item 1 MB for every displayed curve.
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.6]{main_window.png}
+    \caption{Main window of the program.}
+    \label{fig:main_window}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \subfloat[Showing only the curve with the peak.\label{fig:single_curve}]{
+        \includegraphics[scale=0.5]{img/single_curve.png}
+    }
+    \quad
+    \subfloat[Showing multiple curves.\label{fig:multiple_curves}]{
+        \includegraphics[scale=0.5]{img/multiple_curves.png}
+    }
+    \caption[]{Plot of one file.}
+    \label{fig:plots}
+\end{figure}
 
 %-----------------------------------------------------------------------------
 % CONCLUSIONS
@@ -203,95 +268,6 @@ As we will cover in more detail in the next section, this leads to both faster l
 \label{sec:conclusions}
 
 ...
-
-%-----------------------------------------------------------------------------
-% GUIDE (TO BE REMOVED)
-%-----------------------------------------------------------------------------
-\section{Guide (to be removed)}
-
-Figures, Tables and Algorithms have to contain a Caption that describes their content, and have to be properly referred in the text.
-
-\subsection{Figures}
-\label{subsec:figures}
-
-Include figures (\verb|.png|, \verb|.jpg|, \verb|.eps|) with the following command:
-\begin{verbatim}
-\includegraphics[options]{filename.xxx}
-\end{verbatim}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.3\textwidth]{logo_polimi_scritta.eps}
-    \caption{Caption of the Figure.}
-    \label{fig:quadtree}
-\end{figure}
-
-Thanks to the \texttt{\textbackslash subfloat} command, a single figure, such as Figure~\ref{fig:quadtree},
-can contain multiple sub-figures with their own caption and label, e.g. Figure~\ref{fig:polimi_logo1} and Figure~\ref{fig:polimi_logo2}. 
-
-\begin{figure}[H]
-    \centering
-    \subfloat[One PoliMi logo.\label{fig:polimi_logo1}]{
-        \includegraphics[scale=0.5]{img/logo_polimi_scritta.eps}
-    }
-    \quad
-    \subfloat[Another one PoliMi logo.\label{fig:polimi_logo2}]{
-        \includegraphics[scale=0.5]{img/logo_polimi_scritta2.eps}
-    }
-    \caption[]{Caption of the Figure.}
-    \label{fig:quadtree2}
-\end{figure}
-
-\subsection{Tables}
-\label{subsec:tables}
-
-\begin{table}[H]
-    \caption*{\textbf{Example of Table (optional)}}
-    \centering 
-    \begin{tabular}{|p{3em} c c c |}
-    \hline
-    \rowcolor{bluePoli!40}
-     & \textbf{column1} & \textbf{column2} & \textbf{column3} \T\B \\
-    \hline \hline
-    \textbf{row1} & 1 & 2 & 3 \T\B \\
-    \textbf{row2} & $\alpha$ & $\beta$ & $\gamma$ \T\B\\
-    \textbf{row3} & alpha & beta & gamma \B\\
-    \hline
-    \end{tabular}
-    \\[10pt]
-    \caption{Caption of the Table.}
-    \label{table:example}
-\end{table}
-
-\begin{table*}[bp]
-\centering 
-    \begin{tabular}{|p{3em} | c | c | c | c | c | c|}
-    \hline
-    \rowcolor{bluePoli!40}
-     & \textbf{column1} & \textbf{column2} & \textbf{column3} & \textbf{column4} & \textbf{column5} & \textbf{column6} \T\B \\
-    \hline \hline
-    \textbf{row1} & 1 & 2 & 3 & 4 & 5 & 6 \T\B\\
-    \textbf{row2} & a & b & c & d & e & f \T\B\\
-    \textbf{row3} & $\alpha$ & $\beta$ & $\gamma$ & $\delta$ & $\phi$ & $\omega$ \T\B\\
-    \textbf{row4} & alpha & beta & gamma & delta & phi & omega \B\\
-    \hline
-    \end{tabular}
-    \\[10pt]
-    \caption{Highlighting the columns}
-    \label{table:exampleC}
-\end{table*}
-
-How to insert itemized lists:
-\begin{itemize}
-    \item first item;
-    \item second item.
-\end{itemize}
-
-How to write numbered lists:
-\begin{enumerate}
-    \item first item;
-    \item second item.
-\end{enumerate}
 
 %-------------------------------------------------------------------------
 %	END OF YOUR DOCUMENT
