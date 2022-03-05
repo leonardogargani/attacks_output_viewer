@@ -20,29 +20,41 @@ First, place the CSV files inside the `data/input/csv/` directory.
 Then, as a preprocessing step, run the two initial scripts as specified right below (respect the execution order).
 
 1. Go into the `src/utils/` directory:
-   ```bash
+   ```commandline
    cd src/utils/
    ```
 
-3. Convert the `.csv` files into `.npy` files:
-    ```bash
+2. Convert the `.csv` files into `.npy` files:
+    ```commandline
     python csv_to_npy_conversion.py
     ```
    If the script has been successfully executed, then you should find all your new `.npy` files inside
    the `data/output/npy/` directory.
 
-4. Detect the peak of each file, store the result, and generate some images of those bytes:
-    ```bash
+3. Detect the peak of each file, store the result, and generate some images of those bytes:
+    ```commandline
     python peak_detection.py
     ```
-   If the script has been successfully executed, then you should find all the `.png` files inside
-   the `data/output/png/` directory and the `peaks.csv` file inside the `data/output/csv/` directory.
+   If the script has been successfully executed, then you should find the `peaks.csv` file inside the `data/output/csv/`
+   directory.
 
 Finally, execute the program:
-```bash
+```commandline
 cd ..
 python main.py
 ```
+
+
+## How to save images of the plots
+
+If you want to save the plots of every the bytes with all the lines, all at once, then you can execute
+the peak detection script with an additional argument:
+```commandline
+python peak_detection.py --save-png
+```
+
+If the script has been successfully executed, then you should find both the `peaks.csv` file inside the
+`data/output/csv/` directory, and all the `.png` files inside the `data/output/png/` directory.
 
 
 ## How to use a new set of data

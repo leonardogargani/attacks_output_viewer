@@ -4,18 +4,24 @@ Script that detects the peaks saving the results in a .csv file.
 If the corresponding flag is enabled, it also plots each byte saving a png so that the user can statically open it.
 """
 
+import os
+import gc
+import sys
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib
-import os
-import gc
+
 
 NPY_DIRECTORY = "../../data/output/npy/"
 PNG_DIRECTORY = "../../data/output/png/"
 CSV_DIRECTORY = "../../data/output/csv/"
 
-# Set to False for reducing time execution by not generating png images, True for generating those images instead
-SAVE_PNG_PLOTS = False
+
+# If the script is executed with the "--save-png" flag, then generate png images
+if len(sys.argv) == 2 and sys.argv[1] == "--save-png":
+    SAVE_PNG_PLOTS = True
+else:
+    SAVE_PNG_PLOTS = False
 
 
 x_peaks_values = np.empty((16,), dtype=int)
