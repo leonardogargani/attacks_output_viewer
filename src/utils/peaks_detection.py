@@ -1,7 +1,7 @@
 """Script to detect the peak of each plot
 
 Script that detects the peaks saving the results in a .csv file.
-If the corresponding flag is enabled, it also plots each byte saving a png so that the user can statically open it.
+If it is executed with the "--save-png" flag, it also plots each byte saving a png image so that the user can open it.
 """
 
 import os
