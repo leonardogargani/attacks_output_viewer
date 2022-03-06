@@ -1,23 +1,25 @@
 # Attacks output viewer
 
-Data visualization tool for visualizing the output of a CPA/Template attack, mainly based on [PyQt5](https://pypi.org/project/PyQt5),
-[PyQtGraph](https://www.pyqtgraph.org), and [NumPy](https://numpy.org).
+Data visualization tool for visualizing the output of a CPA/Template attack, mainly based on
+[PyQt5](https://pypi.org/project/PyQt5), [PyQtGraph](https://www.pyqtgraph.org), and [NumPy](https://numpy.org).
 
 Further information about this project can be found in the [complete report](report/report.pdf).
 
 
-## Input data
+## Run instructions
 
-The input data is a set of 16 CSV files, each one composed by 256 columns and about 30k lines.
+### Input data
+
+The input data is a set of 16 `.csv` files, each one composed by 256 columns and some tens of thousand of rows.
 
 The values contained inside those files are real numbers between -1.0 and 1.0.
 
+### First execution
 
-## Run instructions
+Place the `.csv` files inside the `data/input/csv/` directory.
 
-First, place the CSV files inside the `data/input/csv/` directory.
-
-Then, as a preprocessing step, run the two initial scripts as specified right below (respect the execution order).
+As a preprocessing step, only if it is the first execution, you must run the two initial scripts
+as specified right below (respect the execution order).
 
 1. Go into the `src/utils/` directory:
    ```commandline
@@ -35,17 +37,26 @@ Then, as a preprocessing step, run the two initial scripts as specified right be
     ```commandline
     python peaks_detection.py
     ```
-   If the script has been successfully executed, then you should find the `peaks.csv` file inside the `data/output/csv/`
-   directory.
+   If the script has been successfully executed, then you should find the `peaks.csv` file inside the
+   `data/output/csv/` directory.
 
-Finally, execute the program:
+At this point you are ready to run the tool:
 ```commandline
 cd ..
 python main.py
 ```
 
+### Later executions
 
-## How to save images of the plots
+If you have already run the program at least once, then there is no need to perform the preprocessing step
+anymore (unless you want to [use a new set of data](#how-to-use-a-new-set-of-data)).
+
+You can directly execute the program:
+```commandline
+python main.py
+```
+
+### How to save images of the plots
 
 If you want to save the plots of every the bytes with all the lines, all at once, then you can execute
 the peak detection script with an additional argument:
@@ -57,11 +68,65 @@ If the script has been successfully executed, then you should find both the `pea
 `data/output/csv/` directory, and all the `.png` files inside the `data/output/png/` directory.
 
 
-## How to use a new set of data
+### How to use a new set of data
 
-If you need to change the CSV files you want to visualize, you must delete all the `.csv` files under `data/input/csv/`,
-add there the new set of `.csv` files, and then re-run the two initial scripts that will overwrite the content
-under `data/output/`.
+If you need to change the CSV files you want to visualize, you must delete all the `.csv` files under
+`data/input/csv/`, add there the new set of `.csv` files, and then re-run the two initial scripts that
+will overwrite the content under `data/output/`.
+
+
+## Codebase structure
+
+After running the two initial scripts, the structure of the codebase will be the following:
+```txt
+|-- attacks_output_viewer
+    |-- data
+    |   |-- input
+    |   |   `-- csv
+    |   |       |-- 0.csv
+    |   |       |-- 1.csv
+    |   |       |-- ...
+    |   |       |-- 15.csv
+    |   |       `-- README.md
+    |   `-- output
+    |       |-- csv
+    |       |   `-- peaks.csv
+    |       |-- npy
+    |       |   |-- 00.npy
+    |       |   |-- 01.npy
+    |       |   |-- ...
+    |       |   `-- 15.npy
+    |       |-- png
+    |       |   |-- 00_peak.png
+    |       |   |-- 01_peak.png
+    |       |   |-- ...
+    |       |   `-- 15_peak.png
+    |       `-- README.md
+    |-- README.md
+    |-- report
+    |   |-- config_files
+    |   |   |-- config.tex
+    |   |   `-- title_page.tex
+    |   |-- img
+    |   |   |-- logo_polimi_ing_indinf.eps
+    |   |   |-- main_window.png
+    |   |   |-- multiple_curves.png
+    |   |   |-- raggiera_polimi.eps
+    |   |   |-- single_curve.png
+    |   |   `-- static_plot.png
+    |   |-- report.pdf
+    |   `-- report.tex
+    |-- src
+        |-- graph_window.py
+        |-- main.py
+        |-- main_window.py
+        |-- ui
+        |   |-- graph_window.ui
+        |   `-- main_window.ui
+        `-- utils
+            |-- csv_to_npy_conversion.py
+            `-- peaks_detection.py
+```
 
 
 ## Gallery
@@ -72,60 +137,6 @@ Here are three pictures of the program at runtime, and an example of an image ge
    <img src="report/img/main_window.png" alt="main window" style="height: 550px"/>
    <img src="report/img/single_curve.png" alt="single curve window" style="height: 500px"/>
    <img src="report/img/multiple_curves.png" alt="multiple curves" style="height: 500px"/>
-   <img src="report/img/static_plot.png" alt="static plot" style="height: 250px"/>
+   <img src="report/img/static_plot.png" alt="static plot" style="height: 220px"/>
 </figure>
-
-
-## Codebase structure
-
-After running the two initial scripts, the structure of the codebase will be the following:
-```txt
-|-- attacks_output_viewer
-|   |-- data
-|   |   |-- input
-|   |   |   `-- csv
-|   |   |       |-- 0.csv
-|   |   |       |-- 1.csv
-|   |   |       |-- ...
-|   |   |       |-- 15.csv
-|   |   |       `-- README.md
-|   |   `-- output
-|   |       |-- csv
-|   |       |   `-- peaks.csv
-|   |       |-- npy
-|   |       |   |-- 00.npy
-|   |       |   |-- 01.npy
-|   |       |   |-- ...
-|   |       |   `-- 15.npy
-|   |       |-- png
-|   |       |   |-- 00_peak.png
-|   |       |   |-- 01_peak.png
-|   |       |   |-- ...
-|   |       |   `-- 15_peak.png
-|   |       `-- README.md
-|   |-- README.md
-|   |-- report
-|   |   |-- config_files
-|   |   |   |-- config.tex
-|   |   |   `-- title_page.tex
-|   |   |-- img
-|   |   |   |-- logo_polimi_ing_indinf.eps
-|   |   |   |-- main_window.png
-|   |   |   |-- multiple_curves.png
-|   |   |   |-- raggiera_polimi.eps
-|   |   |   |-- single_curve.png
-|   |   |   `-- static_plot.png
-|   |   |-- report.pdf
-|   |   `-- report.tex
-|   |-- src
-|   |   |-- graph_window.py
-|   |   |-- main.py
-|   |   |-- main_window.py
-|   |   |-- ui
-|   |   |   |-- graph_window.ui
-|   |   |   `-- main_window.ui
-|   |   `-- utils
-|   |       |-- csv_to_npy_conversion.py
-|   |       `-- peaks_detection.py
-```
 
