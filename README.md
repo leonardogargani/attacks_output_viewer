@@ -1,6 +1,11 @@
 # Attacks output viewer
 
-Data visualization tool for visualizing the output of a CPA/Template attack, mainly based on
+Project for the Embedded Systems course at Politecnico di Milano, A.Y. 2021/2022.
+
+
+## General information
+
+This is a data visualization tool for visualizing the output of a CPA/Template attack, mainly based on
 [PyQt5](https://pypi.org/project/PyQt5), [PyQtGraph](https://www.pyqtgraph.org), and [NumPy](https://numpy.org).
 
 Further information about this project can be found in the [complete report](report/report.pdf).
@@ -140,3 +145,8 @@ Here are three pictures of the program at runtime, and an example of an image ge
    <img src="report/img/static_plot.png" alt="static plot" style="height: 220px"/>
 </figure>
 
+
+## Authors
+
+- Leonardo Gargani
+- Olivier Wartique
